@@ -127,7 +127,7 @@ class Addresses_Customer extends DataExtension {
 		}
 
 		if (!$match) {
-			$shippingAddress->Default = true;
+			$shippingAddress->Default = 0;
 			$shippingAddress->write();
 		}
 
@@ -143,7 +143,7 @@ class Addresses_Customer extends DataExtension {
 		}
 
 		if (!$match) {
-			$billingAddress->Default = true;
+			$billingAddress->Default = 0;
 			$billingAddress->write();
 		}
 	}
@@ -154,13 +154,23 @@ class Addresses_Customer extends DataExtension {
 	 * 
 	 * @return Address The last billing address
 	 */
-	public function BillingAddress() {
-
+	public function BillingAddress($addressID=null) {
+		
 		$addrs = $this->owner->BillingAddresses();
 		if ($addrs && $addrs->exists()) {
-			return $addrs
+			
+			if ($addressID > 0){
+			
+				return $addrs
+				->where("ID",$addressID)
+				->first();
+				
+			}else{
+				return $addrs
 				->where("\"Default\" = 1")
 				->first();
+			}
+			
 		}
 		return null;
 	}
@@ -171,13 +181,21 @@ class Addresses_Customer extends DataExtension {
 	 * 
 	 * @return Address The last shipping address
 	 */
-	public function ShippingAddress() {
+	public function ShippingAddress($addressID=null) {
 
 		$addrs = $this->owner->ShippingAddresses();
 		if ($addrs && $addrs->exists()) {
-			return $addrs
+			if ($addressID > 0){
+				
+				return $addrs
+				->where("ID",$addressID)
+				->first();
+				
+			}else{
+				return $addrs
 				->where("\"Default\" = 1")
 				->first();
+			}
 		}
 		return null;
 	}
@@ -189,6 +207,7 @@ class Addresses_OrderForm extends Extension {
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-validate/jquery.validate.min.js');
 		Requirements::javascript('swipestripe-addresses/javascript/Addresses_OrderForm.js');
 
 		$shippingAddressFields = CompositeField::create(

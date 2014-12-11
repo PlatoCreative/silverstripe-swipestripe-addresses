@@ -9,6 +9,80 @@
 	<% end_if %>
 
 	<fieldset>
+		
+		<% if CurrentMember %>
+		<hr />
+		<div class="row">
+			
+			<style type="text/css">
+				.panel, .panel.callout{
+					padding: 15px;
+					margin-bottom: 0;
+				}
+				.panel p a{
+					color: #000;
+				}
+				.panel.address p{
+				 	font-size: 11px;
+					font-weight: bold;
+					margin-bottom: 0;
+				}
+				.add-new{
+					text-align: center;
+					display: inline-block;
+				}
+				.add-new span{
+					font-size: 20px;
+					font-weight: bold;
+				}
+			</style>
+			
+			
+			<div class="large-6 columns">
+				<h3>Your Shipping Addresses</h3>
+				<br />
+				<% with CurrentMember %>
+					<ul id="shipping" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
+					<% if ShippingAddresses %>
+					<% loop ShippingAddresses %>
+					<li><div class="panel address"><p>
+						<a href="javascript:;" data-id="{$ID}" class="selectable">
+						$Address<br />
+						$City</a><br /><br />
+						<a href="javascript:;" class="edit-address" data-id="{$ID}" data-type="shipping" data-reveal-id="shippingAddressModal"><span class="label success">EDIT</span></a> <a href="javascript:;" data-id="{$ID}" data-type="shipping" class="delete-address"><span class="label warning">DELETE</span></a>
+					</p></div></li>
+					<% end_loop %>
+					<% end_if %>
+					<li><a class="panel address add-new" data-reveal-id="addShippingAddress"><span>+</span></a></li>
+					</ul>
+				<% end_with %>
+			</div>
+			
+			<div class="large-6 columns">
+				<h3>Your Billing Addresses</h3>
+				<br />		
+				<% with CurrentMember %>
+					<ul id="billing" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
+					<% if BillingAddresses %>
+					<% loop BillingAddresses %>
+					<li><div class="panel address"><p>
+						<a href="javascript:;" data-id="{$ID}" class="selectable">
+						$Address<br />
+						$City</a><br /><br />
+						<a href="javascript:;" data-id="{$ID}" data-reveal-id="billingAddressModal"><span class="label success">EDIT</span></a> <a href="javascript:;" class="delete-address" data-id="{$ID}" data-type="billing"><span class="label warning">DELETE</span></a>
+					</p></div></li>
+					<% end_loop %>
+					<% end_if %>
+					<li><a class="panel address add-new" data-reveal-id="addBillingAddress"><span>+</span></a></li>
+					</ul>
+				<% end_with %>
+			</div>
+						
+		</div>
+		
+		<hr />
+		<% end_if %>
+		
 
 		<% if PersonalDetailsFields %>
 		<section class="personal-details">
@@ -20,26 +94,34 @@
 		<hr />
 		<% end_if %>
 
-		<section class="address">
-			<div id="address-shipping">
-				<% loop ShippingAddressFields %>
-					$FieldHolder
-				<% end_loop %>
+		<div class="row customer-addresses">
+			
+			<div class="large-6 columns">
+				<section class="address">
+					<div id="address-shipping">
+						<% loop ShippingAddressFields %>
+							$FieldHolder
+						<% end_loop %>
+					</div>
+				</section>
 			</div>
-		</section>
+			
+			<div class="large-6 columns">
+				<section class="address">
+					<div id="address-billing">
+						<% loop BillingAddressFields %>
+							$FieldHolder
+						<% end_loop %>
+					</div>
+				</section>
+			</div>
+			
+			<hr />
+			
+		</div>
 
-		<hr />
-	
-		<section class="address">
-			<div id="address-billing">
-				<% loop BillingAddressFields %>
-					$FieldHolder
-				<% end_loop %>
-			</div>
-		</section>
 		
-		<hr />
-		
+			
 		<section class="order-details">
 			<h3><% _t('CheckoutForm.YOUR_ORDER', 'Your Order') %></h3>
 
@@ -86,3 +168,6 @@
 <% if IncludeFormTag %>
 </form>
 <% end_if %>
+
+
+<% include Modals %>

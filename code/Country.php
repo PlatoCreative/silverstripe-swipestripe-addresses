@@ -317,8 +317,6 @@ class Country extends DataObject {
 	public static function get_codes() {
 		return self::$iso_3166_countryCodes;
 	}
-
-	//TODO validate that Code is unique for each country
 }
 
 /**
@@ -386,25 +384,20 @@ class Country_Billing extends Country {
 	public function requireDefaultRecords() {
 		
 		parent::requireDefaultRecords();
+		singleton('ShopConfig')->requireDefaultRecords();
 
 		if (!DataObject::get_one('Country_Billing')) {
 
 			$shopConfig = ShopConfig::current_shop_config();
 
-			if (isset($shopConfig->ID)) {
-				foreach (self::$iso_3166_countryCodes as $code => $title) {
-					$country = new Country_Billing();
-					$country->Code = $code;
-					$country->Title = $title;
-					$country->ShopConfigID = $shopConfig->ID;
-					$country->write();
-				}
-				DB::alteration_message('Billing countries created', 'created');
-			} else {
-				DB::alteration_message('Billing countries not created, please re-run /dev/build', 'error');
+			foreach (self::$iso_3166_countryCodes as $code => $title) {
+				$country = new Country_Billing();
+				$country->Code = $code;
+				$country->Title = $title;
+				$country->ShopConfigID = $shopConfig->ID;
+				$country->write();
 			}
-			
-			
+			DB::alteration_message('Billing countries created', 'created');
 		}
 	}
 
@@ -413,4 +406,3 @@ class Country_Billing extends Country {
 			->where("\"CountryID\" = " . $this->ID);
 	}
 }
-

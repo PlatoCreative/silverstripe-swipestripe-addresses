@@ -49,6 +49,8 @@
 	
 })(jQuery);
 	
+;(function($) { 
+	
 	// order form submission
 	$("#OrderForm_OrderForm").submit(function() {
 		// check if a shipping and billing
@@ -307,3 +309,7 @@
 		return false;
 		
 	});	
+
+})(jQuery);
+	
+	

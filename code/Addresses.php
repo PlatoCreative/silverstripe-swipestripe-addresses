@@ -227,6 +227,9 @@ class Addresses_OrderForm extends Extension {
 			TextField::create('ShippingPostalCode', _t('CheckoutPage.POSTAL_CODE',"Zip / Postal Code")),
 			TextField::create('ShippingState', _t('CheckoutPage.STATE',"State / Province"))
 				->addExtraClass('address-break'),
+            DropdownField::create('ShippingRegionCodeCode',
+                "Region", Region_Shipping::get()->map('Code', 'Title')->toArray()
+            ),
 			DropdownField::create('ShippingCountryCode', 
 					_t('CheckoutPage.COUNTRY',"Country"), 
 					Country_Shipping::get()->map('Code', 'Title')->toArray()
@@ -254,6 +257,9 @@ class Addresses_OrderForm extends Extension {
 			TextField::create('BillingPostalCode', _t('CheckoutPage.POSTALCODE',"Zip / Postal Code")),
 			TextField::create('BillingState', _t('CheckoutPage.STATE',"State / Province"))
 				->addExtraClass('address-break'),
+            DropdownField::create('BillingRegionCodeCode',
+                "Region", Region_Billing::get()->map('Code', 'Title')->toArray()
+            ),
 			DropdownField::create('BillingCountryCode', 
 					_t('CheckoutPage.COUNTRY',"Country"), 
 					Country_Billing::get()->map('Code', 'Title')->toArray()

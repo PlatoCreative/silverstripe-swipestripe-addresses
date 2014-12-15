@@ -73,6 +73,8 @@
 		// manage shipping selections
 		$("#shipping .selectable").unbind('click');
 		$("#shipping .selectable").click(function(){
+
+
 			$("#shipping").find( ".callout" ).removeClass("callout selected");
 			$(this).parent().parent().addClass("callout selected");
 			
@@ -87,7 +89,8 @@
 				data: dataquery,
 				dataType : 'json',
 				success: function(data) {
-					
+
+                    alert(data.RegionCode );
 					$('.address #address-shipping #ShippingFirstName input').val(data.FirstName);
 					$('.address #address-shipping #ShippingSurname input').val(data.Surname);
 					$('.address #address-shipping #ShippingCompany input').val(data.Company);
@@ -96,12 +99,15 @@
 					$('.address #address-shipping #ShippingCity input').val(data.City);
 					$('.address #address-shipping #ShippingPostalCode input').val(data.PostalCode);
 					$('.address #address-shipping #ShippingState input').val(data.State);
-					//$('.address #address-shipping #ShippingCity input').val(data.City);	
-									
+					$('.address #address-shipping #ShippingRegionCode select').val(data.RegionCode);
+					//$('.address #address-shipping #ShippingCity input').val(data.City);
+
+                    //update cart
+                    $('.order-form').entwine('sws').updateCart();
 				}
 			});	
 			
-			
+
 		});
 		
 		// manage billing selections

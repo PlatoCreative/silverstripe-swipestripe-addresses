@@ -30,9 +30,9 @@ class AccountPageExtension extends DataExtension {
         
         // get the address that mataches the ID and current member
         if($type == "shipping"){
-          $address = Address_Shipping::get()->where(array("ID" => $addressShippingID, "MemberID" => Member::currentUserID()))->first();
+          $address = Address_Shipping::get()->filter(array("ID" => $addressShippingID, "MemberID" => Member::currentUserID()))->first();
         }elseif($type == "billing"){
-          $address = Address_Billing::get()->where(array("ID" => $addressShippingID, "MemberID" => Member::currentUserID()))->first();
+          $address = Address_Billing::get()->filter(array("ID" => $addressShippingID, "MemberID" => Member::currentUserID()))->first();
         }
         
         // delete it! Should really have soft delete here but Sivlerstripe doesn't provide that :(	
@@ -145,11 +145,11 @@ class AccountPageExtension extends DataExtension {
         
         $addressID = $_GET['addressID'];
         $type = $_GET['type'];
-        
+
         if($type == "shipping"){
-          $address = Address_Shipping::get()->where(array("ID" => $addressID, "MemberID" => Member::currentUserID()))->first()->toMap();
+          $address = Address_Shipping::get()->filter(array("ID" => $addressID, "MemberID" => Member::currentUserID()))->first()->toMap();
         }elseif($type == "billing"){
-          $address = Address_Billing::get()->where(array("ID" => $addressID, "MemberID" => Member::currentUserID()))->first()->toMap();
+          $address = Address_Billing::get()->filter(array("ID" => $addressID, "MemberID" => Member::currentUserID()))->first()->toMap();
         }
         
         return Convert::array2json($address);
@@ -185,9 +185,9 @@ class AccountPageExtension extends DataExtension {
         $data = $_POST;
         
         if($type == "shipping"){
-          $address = Address_Shipping::get()->where(array("ID" => $addressID, "MemberID" => Member::currentUserID()))->first();
+          $address = Address_Shipping::get()->filter(array("ID" => $addressID, "MemberID" => Member::currentUserID()))->first();
         }elseif($type == "billing"){
-          $address = Address_Billing::get()->where(array("ID" => $addressID, "MemberID" => Member::currentUserID()))->first();
+          $address = Address_Billing::get()->filter(array("ID" => $addressID, "MemberID" => Member::currentUserID()))->first();
         }
         
         // add the address based on the type

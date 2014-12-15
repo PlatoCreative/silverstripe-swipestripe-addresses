@@ -1,7 +1,8 @@
 <?php
 
 class AccountPageExtension extends DataExtension {
-      
+
+
   private static $allowed_actions = array (
     'deleteAddress',
     'addAddress',

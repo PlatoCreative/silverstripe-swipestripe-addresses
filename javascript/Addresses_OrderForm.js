@@ -90,7 +90,6 @@
 				dataType : 'json',
 				success: function(data) {
 
-                    alert(data.RegionCode );
 					$('.address #address-shipping #ShippingFirstName input').val(data.FirstName);
 					$('.address #address-shipping #ShippingSurname input').val(data.Surname);
 					$('.address #address-shipping #ShippingCompany input').val(data.Company);

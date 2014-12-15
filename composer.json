@@ -1,5 +1,5 @@
 {
-	"name": "platocreative/swipestripe-addresses",
+	"name": "swipestripe/swipestripe-addresses",
 	"description": "Module for billing and delivery addresses in SwipeStripe.",
 	"homepage": "http://swipestripe.com",
 	"license": "BSD-3-Clause",

@@ -1,8 +1,8 @@
 <?php
-
+/*
+*	AccountPageExtension extends AccountPage
+*/
 class AccountPageExtension extends DataExtension {
-
-
   private static $allowed_actions = array (
     'deleteAddress',
     'addAddress',
@@ -17,8 +17,7 @@ class AccountPageExtension extends DataExtension {
   */
   public function deleteAddress(){
     
-    if($_POST){
-      
+    if($_POST){      
       // is there an ID to process or type?
       if(!isset($_POST['addressID']) || !isset($_POST['type'])) return $this->httpError(403, 'No Address found or you are not allowed to delete that address.');
       
@@ -35,16 +34,20 @@ class AccountPageExtension extends DataExtension {
           $address = Address_Billing::get()->filter(array("ID" => $addressShippingID, "MemberID" => Member::currentUserID()))->first();
         }
         
+		if(Session::get('ShippingAddressID') == $address->ID){
+			Session::clear('ShippingAddressID');
+		}
+		
         // delete it! Should really have soft delete here but Sivlerstripe doesn't provide that :(	
         $address->delete();
-        
+		
         return true;
         
-      }else{
+      } else {
         return false;
       }	
       
-    }else{
+    } else {
       return $this->httpError(404, 'You must select an address to delete.');
     }
     
@@ -201,6 +204,7 @@ class AccountPageExtension extends DataExtension {
           $address->City = $data['ShippingCity'];
           $address->PostalCode = $data['ShippingPostalCode'];
           $address->State = $data['ShippingState'];
+		  $address->RegionCode = $data['ShippingRegionCode'];
           
           $address->write(); // automatic escaping
           
@@ -214,6 +218,7 @@ class AccountPageExtension extends DataExtension {
           $address->City = $data['BillingCity'];
           $address->PostalCode = $data['BillingPostalCode'];
           $address->State = $data['BillingState'];
+		  $address->RegionCode = $data['BillingRegionCode'];
           
           $address->write(); // automatic escaping
         }
@@ -230,6 +235,7 @@ class AccountPageExtension extends DataExtension {
         $returnAddress['State'] = $address->State;
         $returnAddress['CountryCode'] = $address->CountryCode;
         $returnAddress['CountryName'] = $address->CountryName;
+		$returnAddress['RegionCode'] = $address->RegionCode;
         
         return Convert::array2json($returnAddress);
         

@@ -1,4 +1,4 @@
-;(function($) { 
+jQuery(document).ready(function($){
 	$.entwine('sws', function($){
 
 		$('input.shipping-same-address').entwine({
@@ -47,10 +47,9 @@
 
 	});
 	
-})(jQuery);
+});
 	
-;(function($) { 
-	
+jQuery(document).ready(function($){
 	// order form submission
 	$("#OrderForm_OrderForm").submit(function() {
 		// check if a shipping and billing
@@ -64,17 +63,17 @@
 		}
 	});
 	
-	refreshEventListeners();
-	function refreshEventListeners(){
-		
+	function refreshEventListeners(){		
 		// hide normal form but keep it on the page
 		$(".customer-addresses").hide();
 		
 		// manage shipping selections
 		$("#shipping .selectable").unbind('click');
+		
 		$("#shipping .selectable").click(function(){
-
-
+			// set session shipping variable
+			$.post('checkout/setAddressID', {'ShippingAddressID' : $(this).attr('data-id')});
+		
 			$("#shipping").find( ".callout" ).removeClass("callout selected");
 			$(this).parent().parent().addClass("callout selected");
 			
@@ -105,8 +104,6 @@
                     $('.order-form').entwine('sws').updateCart();
 				}
 			});	
-			
-
 		});
 		
 		// manage billing selections
@@ -183,8 +180,6 @@
 						}
 					}
 				});
-				
-				
 			}
 		});
 		
@@ -228,14 +223,12 @@
 						//$('#billingAddressModal #BillingCity input').val(data.City);
 						
 						$(this).data( $("#billingAddressModal form"), "id", addressID );
-					}
-										
+					}						
 				}
 			});	
-			
-		});	
-			
+		});		
 	}
+	refreshEventListeners();
 	
 	// edit address
 	$("#shippingAddressModal form, #billingAddressModal form").submit(function (e) {
@@ -254,7 +247,6 @@
 			data: dataString,
 			dataType : 'json',
 			success: function(data) {
-				
 				// make the new element
 				var newAddressContent = data.Address + '<br>' + data.City;
 				
@@ -267,15 +259,11 @@
 				
 				refreshEventListeners();
 				
-				
 				$('.reveal-modal').foundation('reveal', 'close');
-				
-				
 			}
 		});
 		
-		return false;
-		
+		return false;		
 	});	
 	
 
@@ -283,9 +271,8 @@
 	$("#addShippingAddress form").submit(function (e) {
 		e.preventDefault();
 		
-		var dataString = $(this).serializeArray();
-		
-		var typeOfAddress = $(this).data("type");
+		var dataString = $(this).serializeArray(),
+			typeOfAddress = $(this).data("type");
 		dataString.push({ name: "type", value: typeOfAddress });
 		
 		$.ajax({
@@ -294,7 +281,6 @@
 			data: dataString,
 			dataType : 'json',
 			success: function(data) {
-
 				var newAddressElement = '<li><div class="panel address"><p><a href="javascript:;" data-id="' + data.ID + '" class="selectable">' + data.Address + '<br>' + data.City + '</a><br><br><a href="javascript:;" data-id="' + data.ID + '" data-reveal-id="shippingAddressModal"><span class="label success">EDIT</span></a> <a href="javascript:;" data-id="' + data.ID + '" data-type="shipping" class="delete-address"><span class="label warning">DELETE</span></a></p></div></li>';
 				
 				// add new address to the DOM so no reload is required.
@@ -305,16 +291,10 @@
 				}
 				refreshEventListeners();
 				
-				$('.reveal-modal').foundation('reveal', 'close');
-				
-				
+				$('.reveal-modal').foundation('reveal', 'close');				
 			}
 		});
 		
 		return false;
-		
-	});	
-
-})(jQuery);
-	
-	
+	});
+});	

@@ -1,5 +1,7 @@
 <?php
-
+/*
+*	Addresses_Order extends Order
+*/
 class Addresses_Order extends DataExtension {
 
 	private static $db = array(
@@ -54,6 +56,9 @@ class Addresses_Order extends DataExtension {
 	}
 }
 
+/*
+*	Addresses_Customer extends Customer
+*/
 class Addresses_Customer extends DataExtension {
 
 	private static $has_many = array(
@@ -155,7 +160,6 @@ class Addresses_Customer extends DataExtension {
 	 * @return Address The last billing address
 	 */
 	public function BillingAddress($addressID=null) {
-		
 		$addrs = $this->owner->BillingAddresses();
 		if ($addrs && $addrs->exists()) {
 			
@@ -201,6 +205,9 @@ class Addresses_Customer extends DataExtension {
 	}
 }
 
+/*
+*	Addresses_OrderForm extends OrderForm
+*/
 class Addresses_OrderForm extends Extension {
 
 	public function updateFields($fields) {
@@ -321,6 +328,9 @@ class Addresses_OrderForm extends Extension {
 	}
 }
 
+/*
+*	Addresses_Extension extends ShopConfig
+*/
 class Addresses_Extension extends DataExtension {
 
 	private static $has_many = array(

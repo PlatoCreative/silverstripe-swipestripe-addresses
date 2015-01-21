@@ -56,7 +56,14 @@ class Region extends DataObject {
 	);
 
 	private static $default_sort = 'SortOrder';
-
+	
+	public function onBeforeWrite(){
+		parent::onBeforeWrite();
+		$shopConfig = ShopConfig::current_shop_config();
+		
+		$this->ShopConfigID = $shopConfig->ID;
+	}
+	
 	/**
 	 * Convenience function to prevent errors thrown
 	 */

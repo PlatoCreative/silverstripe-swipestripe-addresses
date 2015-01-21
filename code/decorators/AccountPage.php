@@ -76,39 +76,39 @@ class AccountPageExtension extends DataExtension {
         if($type == "shipping"){
           
           $newAddress = Address_Shipping::create(array(
-          'MemberID' => Member::currentUserID(),
-          'FirstName' => $data['ShippingFirstName'],
-          'Surname' => $data['ShippingSurname'],
-          'Company' => $data['ShippingCompany'],
-          'Address' => $data['ShippingAddress'],
-          'AddressLine2' => $data['ShippingAddressLine2'],
-          'City' => $data['ShippingCity'],
-          'PostalCode' => $data['ShippingPostalCode'],
-          'State' => $data['ShippingState'],
-          //'CountryName' => $data['ShippingCountryName'],
-          'CountryCode' => $data['ShippingCountryCode'],
-          'RegionName' => (isset($data['ShippingRegionName'])) ? $data['ShippingRegionName'] : null,
-          'RegionCode' => (isset($data['ShippingRegionCode'])) ? $data['ShippingRegionCode'] : null,
+			  'MemberID' => Member::currentUserID(),
+			  'FirstName' => $data['ShippingFirstName'],
+			  'Surname' => $data['ShippingSurname'],
+			  'Company' => $data['ShippingCompany'],
+			  'Address' => $data['ShippingAddress'],
+			  'AddressLine2' => $data['ShippingAddressLine2'],
+			  'City' => $data['ShippingCity'],
+			  'PostalCode' => $data['ShippingPostalCode'],
+			  'State' => $data['ShippingState'],
+			  //'CountryName' => $data['ShippingCountryName'],
+			  'CountryCode' => $data['ShippingCountryCode'],
+			  'RegionName' => (isset($data['ShippingRegionName'])) ? $data['ShippingRegionName'] : null,
+			  'RegionCode' => (isset($data['ShippingRegionCode'])) ? $data['ShippingRegionCode'] : null,
           ));
           
           $newAddress->write(); // automatic escaping
           
-        }elseif($type == "billing"){
+        } elseif($type == "billing"){
           
           $newAddress = Address_Billing::create(array(
-          'MemberID' => Member::currentUserID(),
-          'FirstName' => $data['BillingFirstName'],
-          'Surname' => $data['BillingSurname'],
-          'Company' => $data['BillingCompany'],
-          'Address' => $data['BillingAddress'],
-          'AddressLine2' => $data['BillingAddressLine2'],
-          'City' => $data['BillingCity'],
-          'PostalCode' => $data['BillingPostalCode'],
-          'State' => $data['BillingState'],
-          //'CountryName' => $data['BillingCountryName'],
-          'CountryCode' => $data['BillingCountryCode'],
-          'RegionName' => (isset($data['BillingRegionName'])) ? $data['ShippingRegionName'] : null,
-          'RegionCode' => (isset($data['BillingRegionCode'])) ? $data['ShippingRegionCode'] : null,
+			  'MemberID' => Member::currentUserID(),
+			  'FirstName' => $data['BillingFirstName'],
+			  'Surname' => $data['BillingSurname'],
+			  'Company' => $data['BillingCompany'],
+			  'Address' => $data['BillingAddress'],
+			  'AddressLine2' => $data['BillingAddressLine2'],
+			  'City' => $data['BillingCity'],
+			  'PostalCode' => $data['BillingPostalCode'],
+			  'State' => $data['BillingState'],
+			  //'CountryName' => $data['BillingCountryName'],
+			  'CountryCode' => $data['BillingCountryCode'],
+			  //'RegionName' => (isset($data['BillingRegionName'])) ? $data['ShippingRegionName'] : null,
+			  'RegionCode' => (isset($data['BillingRegionCode'])) ? $data['ShippingRegionCode'] : null,
           ));
           
           $newAddress->write(); // automatic escaping
@@ -130,11 +130,11 @@ class AccountPageExtension extends DataExtension {
         
         return Convert::array2json($returnAddress);
         
-      }else{
+      } else {
         return false;
       }	
       
-    }else{
+    } else {
       return $this->httpError(404, 'An address type must be passed.');
     }
     

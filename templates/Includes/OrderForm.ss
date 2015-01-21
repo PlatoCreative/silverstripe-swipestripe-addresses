@@ -44,14 +44,14 @@
 				<% with CurrentMember %>
 					<ul id="shipping" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 					<% if ShippingAddresses %>
-					<% loop ShippingAddresses %>
-					<li><div class="panel address"><p>
-						<a href="javascript:;" data-id="{$ID}" class="selectable">
-						$Address<br />
-						$City</a><br /><br />
-						<a href="javascript:;" class="edit-address" data-id="{$ID}" data-type="shipping" data-reveal-id="shippingAddressModal"><span class="label success">EDIT</span></a> <a href="javascript:;" data-id="{$ID}" data-type="shipping" class="delete-address"><span class="label warning">DELETE</span></a>
-					</p></div></li>
-					<% end_loop %>
+						<% loop ShippingAddresses %>
+							<li><div class="panel address"><p>
+								<a href="javascript:;" data-id="{$ID}" class="selectable">
+								$Address<br />
+								$City</a><br /><br />
+								<a href="javascript:;" class="edit-address" data-id="{$ID}" data-type="shipping" data-reveal-id="shippingAddressModal"><span class="label success">EDIT</span></a> <a href="javascript:;" data-id="{$ID}" data-type="shipping" class="delete-address"><span class="label warning">DELETE</span></a>
+							</p></div></li>
+						<% end_loop %>
 					<% end_if %>
 					<li><a class="panel address add-new" data-reveal-id="addShippingAddress"><span>+</span></a></li>
 					</ul>
@@ -64,14 +64,14 @@
 				<% with CurrentMember %>
 					<ul id="billing" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 					<% if BillingAddresses %>
-					<% loop BillingAddresses %>
-					<li><div class="panel address"><p>
-						<a href="javascript:;" data-id="{$ID}" class="selectable">
-						$Address<br />
-						$City</a><br /><br />
-						<a href="javascript:;" data-id="{$ID}" data-reveal-id="billingAddressModal"><span class="label success">EDIT</span></a> <a href="javascript:;" class="delete-address" data-id="{$ID}" data-type="billing"><span class="label warning">DELETE</span></a>
-					</p></div></li>
-					<% end_loop %>
+						<% loop BillingAddresses %>
+							<li><div class="panel address"><p>
+								<a href="javascript:;" data-id="{$ID}" class="selectable">
+								$Address<br />
+								$City</a><br /><br />
+								<a href="javascript:;" data-id="{$ID}" data-reveal-id="billingAddressModal"><span class="label success">EDIT</span></a> <a href="javascript:;" class="delete-address" data-id="{$ID}" data-type="billing"><span class="label warning">DELETE</span></a>
+							</p></div></li>
+						<% end_loop %>
 					<% end_if %>
 					<li><a class="panel address add-new" data-reveal-id="addBillingAddress"><span>+</span></a></li>
 					</ul>
@@ -85,13 +85,13 @@
 		
 
 		<% if PersonalDetailsFields %>
-		<section class="personal-details">
-			<% loop PersonalDetailsFields %>
-				$FieldHolder
-			<% end_loop %>
-		</section>
-		
-		<hr />
+			<section class="personal-details">
+				<% loop PersonalDetailsFields %>
+					$FieldHolder
+				<% end_loop %>
+			</section>
+			
+			<hr />
 		<% end_if %>
 
 		<div class="row customer-addresses">

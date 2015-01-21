@@ -65,7 +65,7 @@ jQuery(document).ready(function($){
 	
 	function refreshEventListeners(){		
 		// hide normal form but keep it on the page
-		$(".customer-addresses").hide();
+		//$(".customer-addresses").hide();
 		
 		// manage shipping selections
 		$("#shipping .selectable").unbind('click');
@@ -268,12 +268,13 @@ jQuery(document).ready(function($){
 	
 
 	// add address
-	$("#addShippingAddress form").submit(function (e) {
+	$("#addShippingAddress form, #addBillingAddress form").submit(function (e) {
 		e.preventDefault();
 		
 		var dataString = $(this).serializeArray(),
 			typeOfAddress = $(this).data("type");
-		dataString.push({ name: "type", value: typeOfAddress });
+			
+		dataString.push({ name: "type", value: typeOfAddress});
 		
 		$.ajax({
 			type: "POST",

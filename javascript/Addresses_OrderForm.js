@@ -1,8 +1,6 @@
 jQuery(document).ready(function($){
 	$.entwine('sws', function($){
-
 		$('input.shipping-same-address').entwine({
-
 			onmatch : function() {
 				var self = this;
 				var form = this.closest('form');
@@ -50,6 +48,20 @@ jQuery(document).ready(function($){
 });
 
 jQuery(document).ready(function($){
+	// Check addresses if session saved
+	function checkSessionAddresses(){
+		var selectedAddresses = $.get('checkout/getAddressIDs', function(data){
+			console.log(data);
+			if(data.ShippingID != ''){
+				$('.selectable[data-id="' + data.ShippingID + '"]').click();
+			}			
+			if(data.BillingID != ''){
+				$('.selectable[data-id="' + data.BillingID + '"]').click();					
+			}
+		}, 'json');
+	}
+	checkSessionAddresses();
+	
 	// order form submission
 	$("#OrderForm_OrderForm").submit(function() {
 		// check if a shipping and billing
@@ -109,6 +121,9 @@ jQuery(document).ready(function($){
 		// manage billing selections
 		$("#billing .selectable").unbind('click');
 		$("#billing .selectable").click(function(){
+			// set session shipping variable
+			$.post('checkout/setAddressID', {'BillingAddressID' : $(this).attr('data-id')});
+			
 			$("#billing").find( ".callout" ).removeClass("callout");
 			$(this).parent().parent().addClass("callout");
 

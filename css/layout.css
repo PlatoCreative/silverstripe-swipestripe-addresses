@@ -1,8 +1,13 @@
 /* 
-	Addresses CSS
+*	Addresses CSS
 */
 
 .customer-addresses {
 	position:absolute;
-	left:-100000px;	
+	left:-100000px;
+}
+
+#shipping .delete-address.deleting, #billing .delete-address.deleting {
+	background-color:#ed1c24;
+	color:#fff;
 }

@@ -1,6 +1,6 @@
 <?php
 /*
-*	ShippingCheckoutPage extends CheckoutPage_Controller
+*	ShippingCheckoutPage_Controller extends CheckoutPage_Controller
 */
 class ShippingCheckoutPage_Controller extends DataExtension {
 	public function onAfterInit(){

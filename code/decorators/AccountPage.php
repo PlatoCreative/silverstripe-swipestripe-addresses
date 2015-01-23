@@ -1,14 +1,38 @@
 <?php
 /*
-*	AccountPageExtension extends AccountPage
+*	AccountPageExtension_Controller extends AccountPage_Controller
 */
-class AccountPageExtension extends DataExtension {
+class AccountPageExtension_Controller extends DataExtension {
   private static $allowed_actions = array (
     'deleteAddress',
     'addAddress',
     'getAddress',
-    'editAddressAction'
+    'editAddressAction',
+	'viewAddresses',
+	'OrderForm'
   );
+  
+  function OrderForm() {
+	$member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
+
+	$form = OrderForm::create(
+		$this, 
+		'OrderForm'
+	)->disableSecurityToken();
+
+	//Populate fields the first time form is loaded
+	$form->populateFields();
+
+	return $form;
+  }
+  
+  public function viewAddresses(){
+	$this->owner->index();
+	Requirements::CSS('swipestripe-addresses/css/layout.css');
+	Requirements::javascript('swipestripe-addresses/javascript/Addresses_OrderForm.js');
+	
+	return $this->owner->render();
+  }
 
   /**
   *  Delete the selected customers address from the database
@@ -59,7 +83,7 @@ class AccountPageExtension extends DataExtension {
   *
   * @return
   */
-  public function addAddress(){
+  public function addAddress($request){
 
     if($_POST){
 
@@ -184,56 +208,57 @@ class AccountPageExtension extends DataExtension {
         $type = $_POST['type'];
         $addressID = $_POST['addressID'];
         $data = $_POST;
-
+		
         if($type == "shipping"){
           $address = Address_Shipping::get()->filter(array("ID" => $addressID, "MemberID" => Member::currentUserID()))->first();
-        }elseif($type == "billing"){
+        } elseif($type == "billing"){
           $address = Address_Billing::get()->filter(array("ID" => $addressID, "MemberID" => Member::currentUserID()))->first();
         }
 
         // add the address based on the type
         if($type == "shipping"){
 
-          $address->FirstName = $data['ShippingFirstName'];
-          $address->Surname = $data['ShippingSurname'];
-          $address->Company = $data['ShippingCompany'];
-          $address->Address = $data['ShippingAddress'];
-          $address->AddressLine2 = $data['ShippingAddressLine2'];
-          $address->City = $data['ShippingCity'];
-          $address->PostalCode = $data['ShippingPostalCode'];
-          $address->State = $data['ShippingState'];
-		  $address->RegionCode = $data['ShippingRegionCode'];
+          $address->FirstName = isset($data['ShippingFirstName']) ? $data['ShippingFirstName'] : null;
+          $address->Surname = isset($data['ShippingSurname']) ? $data['ShippingSurname'] : null;
+          $address->Company = isset($data['ShippingCompany']) ? $data['ShippingCompany'] : null;
+          $address->Address = isset($data['ShippingAddress']) ? $data['ShippingAddress'] : null;
+          $address->AddressLine2 = isset($data['ShippingAddressLine2']) ? $data['ShippingAddressLine2'] : null;
+          $address->City = isset($data['ShippingCity']) ? $data['ShippingCity'] : null;
+          $address->PostalCode = isset($data['ShippingPostalCode']) ? $data['ShippingPostalCode'] : null;
+          $address->State = isset($data['ShippingState']) ? $data['ShippingState'] : null;
+		  $address->RegionCode = isset($data['ShippingRegionCode']) ? $data['ShippingRegionCode'] : null;
 
           $address->write(); // automatic escaping
 
-        }elseif($type == "billing"){
+        } elseif($type == "billing"){
 
-          $address->FirstName = $data['BillingFirstName'];
-          $address->Surname = $data['BillingSurname'];
-          $address->Company = $data['BillingCompany'];
-          $address->Address = $data['BillingAddress'];
-          $address->AddressLine2 = $data['BillingAddressLine2'];
-          $address->City = $data['BillingCity'];
-          $address->PostalCode = $data['BillingPostalCode'];
-          $address->State = $data['BillingState'];
-		  $address->RegionCode = $data['BillingRegionCode'];
+          $address->FirstName = isset($data['BillingFirstName']) ? $data['BillingFirstName'] : null;
+          $address->Surname = isset($data['BillingSurname']) ? $data['BillingSurname'] : null;
+          $address->Company = isset($data['BillingCompany']) ? $data['BillingCompany'] : null;
+          $address->Address = isset($data['BillingAddress']) ? $data['BillingAddress'] : null;
+          $address->AddressLine2 = isset($data['BillingAddressLine2']) ? $data['BillingAddressLine2'] : null;
+          $address->City = isset($data['BillingCity']) ? $data['BillingCity'] : null;
+          $address->PostalCode = isset($data['BillingPostalCode']) ? $data['BillingPostalCode'] : null;
+          $address->State = isset($data['BillingState']) ? $data['BillingState'] : null;
+		  $address->RegionCode = isset($data['BillingRegionCode']) ? $data['BillingRegionCode'] : null;
 
           $address->write(); // automatic escaping
         }
 
-        $returnAddress = array();
-        $returnAddress['ID'] = $address->ID;
-        $returnAddress['FirstName'] = $address->FirstName;
-        $returnAddress['Surname'] = $address->Surname;
-        $returnAddress['Company'] = $address->Company;
-        $returnAddress['Address'] = $address->Address;
-        $returnAddress['AddressLine2'] = $address->AddressLine2;
-        $returnAddress['City'] = $address->City;
-        $returnAddress['PostalCode'] = $address->PostalCode;
-        $returnAddress['State'] = $address->State;
-        $returnAddress['CountryCode'] = $address->CountryCode;
-        $returnAddress['CountryName'] = $address->CountryName;
-		$returnAddress['RegionCode'] = $address->RegionCode;
+        $returnAddress = array(
+        	'ID' => $address->ID,
+        	'FirstName' => $address->FirstName,
+        	'Surname' => $address->Surname,
+        	'Company' => $address->Company,
+        	'Address' => $address->Address,
+        	'AddressLine2' => $address->AddressLine2,
+        	'City' => $address->City,
+        	'PostalCode' => $address->PostalCode,
+        	'State' => $address->State,
+        	'CountryCode' => $address->CountryCode,
+        	'CountryName' => $address->CountryName,
+			'RegionCode' => $address->RegionCode
+		);
 
         return Convert::array2json($returnAddress);
 
@@ -246,6 +271,4 @@ class AccountPageExtension extends DataExtension {
     }
 
   }
-
-
 }

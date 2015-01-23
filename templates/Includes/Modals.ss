@@ -3,7 +3,7 @@
     <div class="row">
       <div class="large-12 columns">
         <% loop ShippingAddressFields %>
-        $FieldHolder
+        	$FieldHolder
         <% end_loop %>
       </div>
     </div>
@@ -21,7 +21,7 @@
     <div class="row">
       <div class="large-12 columns">
         <% loop BillingAddressFields %>
-        $FieldHolder
+        	$FieldHolder
         <% end_loop %>
       </div>
     </div>
@@ -40,7 +40,7 @@
     <div class="row">
       <div class="large-12 columns">
         <% loop ShippingAddressFields %>
-        $FieldHolder
+        	$FieldHolder
         <% end_loop %>
       </div>
     </div>
@@ -58,7 +58,7 @@
     <div class="row">
       <div class="large-12 columns">
         <% loop BillingAddressFields %>
-        $FieldHolder
+        	$FieldHolder
         <% end_loop %>
       </div>
     </div>

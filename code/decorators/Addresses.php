@@ -34,20 +34,24 @@ class Addresses_Order extends DataExtension {
 	);
 
 	public function onBeforeWrite() {
-
 		//Update address names
 		$country = Country_Shipping::get()->where("\"Code\" = '{$this->owner->ShippingCountryCode}'")->first();
-		if ($country && $country->exists()) $this->owner->ShippingCountryName = $country->Title;
+		if ($country && $country->exists()){
+			$this->owner->ShippingCountryName = $country->Title;
+		}
 
 		$region = Region_Shipping::get()->where("\"Code\" = '{$this->owner->ShippingRegionCode}'")->first();
-		if ($region && $region->exists()) $this->owner->ShippingRegionName = $region->Title;
+		if ($region && $region->exists()){
+			$this->owner->ShippingRegionName = $region->Title;
+		}
 
 		$country = Country_Billing::get()->where("\"Code\" = '{$this->owner->BillingCountryCode}'")->first();
-		if ($country && $country->exists()) $this->owner->BillingCountryName = $country->Title;
+		if ($country && $country->exists()){
+			$this->owner->BillingCountryName = $country->Title;
+		}
 	}
 
 	public function onBeforePayment() {
-
 		//Save the addresses to the Customer
 		$customer = $this->owner->Member();
 		if ($customer && $customer->exists()) {
@@ -60,17 +64,15 @@ class Addresses_Order extends DataExtension {
 *	Addresses_Customer extends Customer
 */
 class Addresses_Customer extends DataExtension {
-
 	private static $has_many = array(
 		'ShippingAddresses' => 'Address_Shipping',
 		'BillingAddresses' => 'Address_Billing'
 	);
 
 	public function createAddresses($order) {
-		//Find identical addresses
-		//If none exist then create a new address and set it as default
-		//Default is not used when comparing
-
+		// Find identical addresses
+		// If none exist then create a new address and set it as default
+		// Default is not used when comparing
 		$data = $order->toMap();
 		
 		// Set Firstname/Surname Fields on Member table
@@ -83,42 +85,55 @@ class Addresses_Customer extends DataExtension {
 			$this->owner->write();
 		}
 		
-		$shippingAddress = Address_Shipping::create(array(
+		$shippingFields = array(
 			'MemberID' => $this->owner->ID,
-			'FirstName' => $data['ShippingFirstName'],
-			'Surname' => $data['ShippingSurname'],
-			'Company' => $data['ShippingCompany'],
-			'Address' => $data['ShippingAddress'],
-			'AddressLine2' => $data['ShippingAddressLine2'],
-			'City' => $data['ShippingCity'],
-			'PostalCode' => $data['ShippingPostalCode'],
-			'State' => $data['ShippingState'],
-			'CountryName' => $data['ShippingCountryName'],
-			'CountryCode' => $data['ShippingCountryCode'],
-			'RegionName' => (isset($data['ShippingRegionName'])) ? $data['ShippingRegionName'] : null,
-			'RegionCode' => (isset($data['ShippingRegionCode'])) ? $data['ShippingRegionCode'] : null,
-		));
+			'FirstName' => isset($data['ShippingFirstName']) ? $data['ShippingFirstName'] : null,
+			'Surname' => isset($data['ShippingSurname']) ? $data['ShippingSurname'] : null,
+			'Company' => isset($data['ShippingCompany']) ? $data['ShippingCompany'] : null,
+			'Address' => isset($data['ShippingAddress']) ? $data['ShippingAddress'] : null,
+			'AddressLine2' => isset($data['ShippingAddressLine2']) ? $data['ShippingAddressLine2'] : null,
+			'City' => isset($data['ShippingCity']) ? $data['ShippingCity'] : null,
+			'PostalCode' => isset($data['ShippingPostalCode']) ? $data['ShippingPostalCode'] : null,
+			'State' => isset($data['ShippingState']) ? $data['ShippingState'] : null,
+			'CountryName' => isset($data['ShippingCountryName']) ? $data['ShippingCountryName'] : null,
+			'CountryCode' => isset($data['ShippingCountryCode']) ? $data['ShippingCountryCode'] : null,
+			'RegionName' => isset($data['ShippingRegionName']) ? $data['ShippingRegionName'] : null,
+			'RegionCode' => isset($data['ShippingRegionCode']) ? $data['ShippingRegionCode'] : null,
+		);
 
-		$billingAddress = Address_Billing::create(array(
+		$billingFields = array(
 			'MemberID' => $this->owner->ID,
-			'FirstName' => $data['BillingFirstName'],
-			'Surname' => $data['BillingSurname'],
-			'Company' => $data['BillingCompany'],
-			'Address' => $data['BillingAddress'],
-			'AddressLine2' => $data['BillingAddressLine2'],
-			'City' => $data['BillingCity'],
-			'PostalCode' => $data['BillingPostalCode'],
-			'State' => $data['BillingState'],
-			'CountryName' => $data['BillingCountryName'],
-			'CountryCode' => $data['BillingCountryCode'],
-			'RegionName' => (isset($data['BillingRegionName'])) ? $data['ShippingRegionName'] : null,
-			'RegionCode' => (isset($data['BillingRegionCode'])) ? $data['ShippingRegionCode'] : null,
-		));
-
-		//Look for identical existing addresses
-
+			'FirstName' => isset($data['BillingFirstName']) ? $data['BillingFirstName'] : null,
+			'Surname' => isset($data['BillingSurname']) ? $data['BillingSurname'] : null,
+			'Company' => isset($data['BillingCompany']) ? $data['BillingCompany'] : null,
+			'Address' => isset($data['BillingAddress']) ? $data['BillingAddress'] : null,
+			'AddressLine2' => isset($data['BillingAddressLine2']) ? $data['BillingAddressLine2'] : null,
+			'City' => isset($data['BillingCity']) ? $data['BillingCity'] : null,
+			'PostalCode' => isset($data['BillingPostalCode']) ? $data['BillingPostalCode'] : null,
+			'State' => isset($data['BillingState']) ? $data['BillingState'] : null,
+			'CountryName' => isset($data['BillingCountryName']) ? $data['BillingCountryName'] : null,
+			'CountryCode' => isset($data['BillingCountryCode']) ? $data['BillingCountryCode'] : null,
+			'RegionName' => isset($data['BillingRegionName']) ? $data['ShippingRegionName'] : null,
+			'RegionCode' => isset($data['BillingRegionCode']) ? $data['ShippingRegionCode'] : null,
+		);
+		
+		$shippingID = Session::get('ShippingAddressID');
+		$billingID = Session::get('BillingAddressID');
+		
+		//Look for existing addresses or create a new one if needed
+		$shippingAddress = Address_Shipping::get()->filter(array('ID' => $shippingID))->first();
+		$shippingAddress = $shippingAddress ? $shippingAddress : Address_Shipping::create($shippingFields);
+		$shippingAddress->write();
+		
+		$billingAddress = Address_Billing::get()->filter(array('ID' => $billingID))->first();
+		$billingAddress = $billingAddress ? $billingAddress : Address_Billing::create($billingFields);
+		$billingAddress->write();
+		
+		Session::clear('ShippingAddressID');
+		Session::clear('BillingAddressID');
+		
 		//TODO when a match is made then make that matched address the default now
-
+		/*
 		$match = false;
 		foreach ($this->owner->ShippingAddresses() as $address) {
 
@@ -151,6 +166,7 @@ class Addresses_Customer extends DataExtension {
 			$billingAddress->Default = 0;
 			$billingAddress->write();
 		}
+		*/
 	}
 
 	/**
@@ -211,7 +227,6 @@ class Addresses_Customer extends DataExtension {
 class Addresses_OrderForm extends Extension {
 
 	public function updateFields($fields) {
-
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-validate/jquery.validate.min.js');
@@ -219,20 +234,20 @@ class Addresses_OrderForm extends Extension {
 
 		$shippingAddressFields = CompositeField::create(
 			HeaderField::create(_t('CheckoutPage.SHIPPING_ADDRESS',"Shipping Address"), 3),
-			TextField::create('ShippingFirstName', _t('CheckoutPage.FIRSTNAME',"First Name"))
+			TextField::create('ShippingFirstName', _t('CheckoutPage.FIRSTNAME',"First Name"), '')
 				->addExtraClass('shipping-firstname')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_FIRSTNAME',"Please enter a first name.")),
-			TextField::create('ShippingSurname', _t('CheckoutPage.SURNAME',"Surname"))
+			TextField::create('ShippingSurname', _t('CheckoutPage.SURNAME',"Surname"), '')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_SURNAME',"Please enter a surname.")),
-			TextField::create('ShippingCompany', _t('CheckoutPage.COMPANY',"Company")),
-			TextField::create('ShippingAddress', _t('CheckoutPage.ADDRESS',"Address"))
+			TextField::create('ShippingCompany', _t('CheckoutPage.COMPANY',"Company"), ''),
+			TextField::create('ShippingAddress', _t('CheckoutPage.ADDRESS',"Address"), '')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_ADDRESS',"Please enter an address."))
 				->addExtraClass('address-break'),
-			TextField::create('ShippingAddressLine2', '&nbsp;'),
-			TextField::create('ShippingCity', _t('CheckoutPage.CITY',"City"))
+			TextField::create('ShippingAddressLine2', '&nbsp;', ''),
+			TextField::create('ShippingCity', _t('CheckoutPage.CITY',"City"), '')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_CITY',"Please enter a city.")),
-			TextField::create('ShippingPostalCode', _t('CheckoutPage.POSTAL_CODE',"Zip / Postal Code")),
-			TextField::create('ShippingState', _t('CheckoutPage.STATE',"State / Province"))
+			TextField::create('ShippingPostalCode', _t('CheckoutPage.POSTAL_CODE',"Zip / Postal Code"), ''),
+			TextField::create('ShippingState', _t('CheckouanypotPage.STATE',"State / Province"), '')
 				->addExtraClass('address-break'),
             DropdownField::create('ShippingRegionCode',
                 "Region", Region_Shipping::get()->map('Code', 'Title')->toArray()
@@ -247,38 +262,41 @@ class Addresses_OrderForm extends Extension {
 
 		$billingAddressFields = CompositeField::create(
 			HeaderField::create(_t('CheckoutPage.BILLINGADDRESS',"Billing Address"), 3),
-			$checkbox = CheckboxField::create('BillToShippingAddress', _t('CheckoutPage.SAME_ADDRESS',"same as shipping address?"))
-				->addExtraClass('shipping-same-address'),
-			TextField::create('BillingFirstName', _t('CheckoutPage.FIRSTNAME',"First Name"))
+			TextField::create('BillingFirstName', _t('CheckoutPage.FIRSTNAME',"First Name"), '')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURFIRSTNAME',"Please enter your first name."))
 				->addExtraClass('address-break'),
-			TextField::create('BillingSurname', _t('CheckoutPage.SURNAME',"Surname"))
+			TextField::create('BillingSurname', _t('CheckoutPage.SURNAME',"Surname"), '')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURSURNAME',"Please enter your surname.")),
-			TextField::create('BillingCompany', _t('CheckoutPage.COMPANY',"Company")),
-			TextField::create('BillingAddress', _t('CheckoutPage.ADDRESS',"Address"))
+			TextField::create('BillingCompany', _t('CheckoutPage.COMPANY',"Company"), ''),
+			TextField::create('BillingAddress', _t('CheckoutPage.ADDRESS',"Address"), '')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURADDRESS',"Please enter your address."))
 				->addExtraClass('address-break'),
-			TextField::create('BillingAddressLine2', '&nbsp;'),
-			TextField::create('BillingCity', _t('CheckoutPage.CITY',"City"))
+			TextField::create('BillingAddressLine2', '&nbsp;', ''),
+			TextField::create('BillingCity', _t('CheckoutPage.CITY',"City"), '')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCITY',"Please enter your city")),
-			TextField::create('BillingPostalCode', _t('CheckoutPage.POSTALCODE',"Zip / Postal Code")),
-			TextField::create('BillingState', _t('CheckoutPage.STATE',"State / Province"))
+			TextField::create('BillingPostalCode', _t('CheckoutPage.POSTALCODE',"Zip / Postal Code")), '',
+			TextField::create('BillingState', _t('CheckoutPage.STATE',"State / Province"), '')
 				->addExtraClass('address-break'),
-            DropdownField::create('BillingRegionCode',
-                "Region", Region_Billing::get()->map('Code', 'Title')->toArray()
-            ),
+		   //DropdownField::create('BillingRegionCode',
+                //"Region", Region_Billing::get()->map('Code', 'Title')->toArray()
+            //),
 			DropdownField::create('BillingCountryCode', 
 					_t('CheckoutPage.COUNTRY',"Country"), 
 					Country_Billing::get()->map('Code', 'Title')->toArray()
-				)->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCOUNTRY',"Please enter your country."))
+				)->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCOUNTRY', "Please enter your country."))
 		)->setID('BillingAddress')->setName('BillingAddress');
-
+		
+		$sameAsBilling = CompositeField::create(
+			CheckboxField::create('BillToShippingAddress', _t('CheckoutPage.SAME_ADDRESS', "Same as shipping address?"))
+				->addExtraClass('shipping-same-address')->setValue(0)
+		)->setID('SameBillingAddress')->setName('SameBillingAddress');
+		
 		$fields->push($shippingAddressFields);
 		$fields->push($billingAddressFields);
+		$fields->push($sameAsBilling);
 	}
 
 	public function updateValidator($validator) {
-
 		$validator->appendRequiredFields(RequiredFields::create(
 			'ShippingFirstName',
 			'ShippingSurname',
@@ -325,6 +343,10 @@ class Addresses_OrderForm extends Extension {
 
 	public function getBillingAddressFields() {
 		return $this->owner->Fields()->fieldByName('BillingAddress');
+	}
+	
+	public function getSameBillingAddressFields() {
+		return $this->owner->Fields()->fieldByName('SameBillingAddress');
 	}
 }
 

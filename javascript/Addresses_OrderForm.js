@@ -2,8 +2,8 @@ jQuery(document).ready(function($){
 	$.entwine('sws', function($){
 		$('input.shipping-same-address').entwine({
 			onmatch : function() {
-				var self = this;
-				var form = this.closest('form');
+				var self = this,
+					form = this.closest('form');
 
 				this.on('change', function(e) {
 					self._copyAddress(e);
@@ -24,41 +24,39 @@ jQuery(document).ready(function($){
 
 			_copyAddress: function(e) {
 				var form = this.closest('form');
-
-				if (this.is(':checked')) {
+				if(this.is(':checked')) {
+					$("#billing").find(".callout").removeClass("callout");
 					$('#address-shipping input[type=text], #address-shipping select', form).each(function(){
 						$('#' + $(this).attr('id').replace(/Shipping/i, 'Billing'))
-							.val($('#' + $(this).attr('id')).val())
-							.parent().parent().hide();
+							.val($('#' + $(this).attr('id')).val());
+							//.parent().parent().hide(); // Removed and hidden with css instead
 					});
 				}
-				//Only clear fields if specifically unticking checkbox
+				// Only clear fields if specifically unticking checkbox
 				else if ($(e.currentTarget).attr('id') == this.attr('id')) {
 					$('#address-shipping input[type=text], #address-shipping select', form).each(function(){
 						$('#' + $(this).attr('id').replace(/Shipping/i, 'Billing'))
-							.val('')
-							.parent().parent().show();
+							.val('');
+							//.parent().parent().show(); // Removed and hidden with css instead
 					});
 				}
 			}
 		});
 
 	});
-
-});
-
-jQuery(document).ready(function($){
+	
 	// Check addresses if session saved
 	function checkSessionAddresses(){
-		var selectedAddresses = $.get('checkout/getAddressIDs', function(data){
-			console.log(data);
-			if(data.ShippingID != ''){
-				$('.selectable[data-id="' + data.ShippingID + '"]').click();
-			}			
-			if(data.BillingID != ''){
-				$('.selectable[data-id="' + data.BillingID + '"]').click();					
-			}
-		}, 'json');
+		if($('.CheckoutPage').length > 0){
+			var selectedAddresses = $.get('checkout/getAddressIDs', function(data){
+				if(data.ShippingID != ''){
+					$('.selectable[data-id="' + data.ShippingID + '"]').click();
+				}			
+				if(data.BillingID != ''){
+					$('.selectable[data-id="' + data.BillingID + '"]').click();					
+				}
+			}, 'json');
+		}
 	}
 	checkSessionAddresses();
 	
@@ -81,77 +79,80 @@ jQuery(document).ready(function($){
 
 		// manage shipping selections
 		$("#shipping .selectable").unbind('click');
-
 		$("#shipping .selectable").click(function(){
-			// set session shipping variable
-			$.post('checkout/setAddressID', {'ShippingAddressID' : $(this).attr('data-id')});
+			if($('.CheckoutPage').length > 0){
+				// set session shipping variable
+				$.post('checkout/setAddressID', {'ShippingAddressID' : $(this).attr('data-id')});
+			
 
-			$("#shipping").find( ".callout" ).removeClass("callout selected");
-			$(this).parent().parent().addClass("callout selected");
-
-			var addressID = $(this).data("id");
-			var typeOfAddress = "shipping";
-			var dataquery = { addressID: addressID, type: typeOfAddress };
-			modal = $(this);
-
-			$.ajax({
-				type: "GET",
-				url : "account/getAddress",
-				data: dataquery,
-				dataType : 'json',
-				success: function(data) {
-
-					$('.address #address-shipping #ShippingFirstName input').val(data.FirstName);
-					$('.address #address-shipping #ShippingSurname input').val(data.Surname);
-					$('.address #address-shipping #ShippingCompany input').val(data.Company);
-					$('.address #address-shipping #ShippingAddress input').val(data.Address);
-					$('.address #address-shipping #ShippingAddressLine2 input').val(data.AddressLine2);
-					$('.address #address-shipping #ShippingCity input').val(data.City);
-					$('.address #address-shipping #ShippingPostalCode input').val(data.PostalCode);
-					$('.address #address-shipping #ShippingState input').val(data.State);
-					$('.address #address-shipping #ShippingRegionCode select').val(data.RegionCode);
-					//$('.address #address-shipping #ShippingCity input').val(data.City);
-
-                    //update cart
-                    $('.order-form').entwine('sws').updateCart();
-				}
-			});
+				$("#shipping").find( ".callout" ).removeClass("callout selected");
+				$(this).parent().parent().addClass("callout selected");
+	
+				var addressID = $(this).data("id"),
+					typeOfAddress = "shipping",
+					dataquery = { addressID: addressID, type: typeOfAddress };
+				modal = $(this);
+	
+				$.ajax({
+					type: "GET",
+					url : "account/getAddress",
+					data: dataquery,
+					dataType : 'json',
+					success: function(data) {
+	
+						$('.address #address-shipping #ShippingFirstName input').val(data.FirstName);
+						$('.address #address-shipping #ShippingSurname input').val(data.Surname);
+						$('.address #address-shipping #ShippingCompany input').val(data.Company);
+						$('.address #address-shipping #ShippingAddress input').val(data.Address);
+						$('.address #address-shipping #ShippingAddressLine2 input').val(data.AddressLine2);
+						$('.address #address-shipping #ShippingCity input').val(data.City);
+						$('.address #address-shipping #ShippingPostalCode input').val(data.PostalCode);
+						$('.address #address-shipping #ShippingState input').val(data.State);
+						$('.address #address-shipping #ShippingRegionCode select').val(data.RegionCode);
+						//$('.address #address-shipping #ShippingCity input').val(data.City);
+	
+						//update cart
+						$('.order-form').entwine('sws').updateCart();
+					}
+				});
+			}
 		});
 
 		// manage billing selections
 		$("#billing .selectable").unbind('click');
 		$("#billing .selectable").click(function(){
-			// set session shipping variable
-			$.post('checkout/setAddressID', {'BillingAddressID' : $(this).attr('data-id')});
-			
-			$("#billing").find( ".callout" ).removeClass("callout");
-			$(this).parent().parent().addClass("callout");
-
-			var addressID = $(this).data("id");
-			var typeOfAddress = "billing";
-			var dataquery = { addressID: addressID, type: typeOfAddress };
-			modal = $(this);
-
-			$.ajax({
-				type: "GET",
-				url : "account/getAddress",
-				data: dataquery,
-				dataType : 'json',
-				success: function(data) {
-
-					$('.address #address-billing #BillingFirstName input').val(data.FirstName);
-					$('.address #address-billing #BillingSurname input').val(data.Surname);
-					$('.address #address-billing #BillingCompany input').val(data.Company);
-					$('.address #address-billing #BillingAddress input').val(data.Address);
-					$('.address #address-billing #BillingAddressLine2 input').val(data.AddressLine2);
-					$('.address #address-billing #BillingCity input').val(data.City);
-					$('.address #address-billing #BillingPostalCode input').val(data.PostalCode);
-					$('.address #address-billing #BillingState input').val(data.State);
-					//$('.address #address-billing #BillingCity input').val(data.City);
-
-				}
-			});
-
+			if($('.CheckoutPage').length > 0){
+				$('#OrderForm_OrderForm_BillToShippingAddress').attr('checked', false);
+				
+				// set session shipping variable
+				$.post('checkout/setAddressID', {'BillingAddressID' : $(this).attr('data-id')});
+				
+				$("#billing").find(".callout").removeClass("callout");
+				$(this).parent().parent().addClass("callout");
+	
+				var addressID = $(this).data("id");
+				var typeOfAddress = "billing";
+				var dataquery = { addressID: addressID, type: typeOfAddress };
+				modal = $(this);
+	
+				$.ajax({
+					type: "GET",
+					url : "account/getAddress",
+					data: dataquery,
+					dataType : 'json',
+					success: function(data) {
+						$('.address #address-billing #BillingFirstName input').val(data.FirstName);
+						$('.address #address-billing #BillingSurname input').val(data.Surname);
+						$('.address #address-billing #BillingCompany input').val(data.Company);
+						$('.address #address-billing #BillingAddress input').val(data.Address);
+						$('.address #address-billing #BillingAddressLine2 input').val(data.AddressLine2);
+						$('.address #address-billing #BillingCity input').val(data.City);
+						$('.address #address-billing #BillingPostalCode input').val(data.PostalCode);
+						$('.address #address-billing #BillingState input').val(data.State);
+						//$('.address #address-billing #BillingCity input').val(data.City);
+					}
+				});
+			}
 		});
 
 		// delete selected address
@@ -161,9 +162,9 @@ jQuery(document).ready(function($){
 			if (cnfm == true) {
 				btn = $(this);
 
-				var addressID = $(this).data("id");
-				var typeOfAddress = $(this).data("type");
-				var dataquery = { addressID: addressID, type: typeOfAddress };
+				var addressID = $(this).data("id"),
+					typeOfAddress = $(this).data("type"),
+					dataquery = { addressID: addressID, type: typeOfAddress };
 
 				$.ajax({
 					type: "POST",
@@ -173,15 +174,15 @@ jQuery(document).ready(function($){
 						// if success
 						if(data == 1){
 
-							btn.find("span").html("DELETING").css("background-color", "red");
+							btn.addClass('deleting').find("span").html("DELETING");
 							setTimeout(function(){
 								// after a second or two remove the deleted item from the DOM
 								btn.closest( "li" ).remove();
 							}, 2000);
 
-						}else{
+						} else {
 							// silly animatation to show user something failed
-							btn.find("span").html("DELETING").css("background-color", "red");
+							btn.addClass('deleting').find("span").html("DELETING");
 							setTimeout(function(){
 								btn.find("span")
 									.animate({'left':(+10)+'px'},200)
@@ -190,7 +191,7 @@ jQuery(document).ready(function($){
 									.animate({'left':(-10)+'px'},200)
 									.animate({'left':(+0)+'px'},200);
 									btn.find("span").html("REMOVE").css("background-color", "");
-								}, 2000);
+							}, 2000);
 
 						}
 					}
@@ -201,18 +202,17 @@ jQuery(document).ready(function($){
 		// get address details before edit
 		$(".edit-address").unbind('click');
 		$(".edit-address").click(function(){
-			var addressID = $(this).data("id");
-			var typeOfAddress = $(this).data("type");
-			var dataquery = { addressID: addressID, type: typeOfAddress };
+			var addressesID = $(this).data("id"),
+				typeOfAddress = $(this).data("type"),
+				dataquery = {'addressID' : addressesID, 'type' : typeOfAddress};
 			modal = $(this);
-
+			
 			$.ajax({
 				type: "GET",
 				url : "account/getAddress",
 				data: dataquery,
 				dataType : 'json',
 				success: function(data) {
-					console.log(data);
 					if(typeOfAddress == "shipping"){
 						$('#shippingAddressModal #ShippingFirstName input').val(data.FirstName);
 						$('#shippingAddressModal #ShippingSurname input').val(data.Surname);
@@ -223,10 +223,8 @@ jQuery(document).ready(function($){
 						$('#shippingAddressModal #ShippingPostalCode input').val(data.PostalCode);
 						$('#shippingAddressModal #ShippingState input').val(data.State);
 						//$('#shippingAddressModal #ShippingCity input').val(data.City);
-
-						$("#shippingAddressModal form").data("id", addressID);
-
-					}else{
+						$("#shippingAddressModal form").attr("data-id", data.ID);
+					} else {
 						$('#billingAddressModal #BillingFirstName input').val(data.FirstName);
 						$('#billingAddressModal #BillingSurname input').val(data.Surname);
 						$('#billingAddressModal #BillingCompany input').val(data.Company);
@@ -236,8 +234,7 @@ jQuery(document).ready(function($){
 						$('#billingAddressModal #BillingPostalCode input').val(data.PostalCode);
 						$('#billingAddressModal #BillingState input').val(data.State);
 						//$('#billingAddressModal #BillingCity input').val(data.City);
-
-						$(this).data( $("#billingAddressModal form"), "id", addressID );
+						$("#billingAddressModal form").attr("data-id", data.ID);
 					}
 				}
 			});
@@ -246,12 +243,12 @@ jQuery(document).ready(function($){
 	refreshEventListeners();
 
 	// edit address
-	$("#shippingAddressModal form, #billingAddressModal form").submit(function (e) {
+	$("#shippingAddressModal form, #billingAddressModal form").submit(function(e){
 		e.preventDefault();
 
-		var dataString = $(this).serializeArray();
-		var addressID = $(this).data("id");
-		var typeOfAddress = $(this).data("type");
+		var dataString = $(this).serializeArray(),
+			addressID = $(this).data("id"),
+			typeOfAddress = $(this).data("type");
 
 		dataString.push({ name: "type", value: typeOfAddress });
 		dataString.push({ name: "addressID", value: addressID });
@@ -296,7 +293,7 @@ jQuery(document).ready(function($){
 			data: dataString,
 			dataType : 'json',
 			success: function(data) {
-				var newAddressElement = '<li><div class="panel address"><p><a href="javascript:;" data-id="' + data.ID + '" class="selectable">' + data.Address + '<br>' + data.City + '</a><br><br><a href="javascript:;" data-id="' + data.ID + '" data-reveal-id="shippingAddressModal"><span class="label success">EDIT</span></a> <a href="javascript:;" data-id="' + data.ID + '" data-type="shipping" class="delete-address"><span class="label warning">DELETE</span></a></p></div></li>';
+				var newAddressElement = '<li><div class="panel address"><p><a href="javascript:;" data-id="' + data.ID + '" class="selectable">' + data.Address + '<br>' + data.City + '</a><br><br><a href="javascript:;" data-id="' + data.ID + '" class="edit-address" data-reveal-id="' + typeOfAddress + 'AddressModal" data-type="' + typeOfAddress + '"><span class="label success">EDIT</span></a> <a href="javascript:;" data-id="' + data.ID + '" data-type="' + typeOfAddress + '" class="delete-address"><span class="label warning">DELETE</span></a></p></div></li>';
 
 				// add new address to the DOM so no reload is required.
 				if(typeOfAddress == "shipping"){

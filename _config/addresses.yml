@@ -20,7 +20,7 @@ ShopConfig:
 
 AccountPage_Controller:
   extensions:
-    - 'AccountPageExtension'
+    - 'AccountPageExtension_Controller'
 
 CheckoutPage_Controller:
   extensions:

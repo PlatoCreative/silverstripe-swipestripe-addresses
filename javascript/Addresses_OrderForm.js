@@ -17,11 +17,9 @@ jQuery(document).ready(function($){
 
 				this._super();
 			},
-
 			onunmatch: function() {
 				this._super();
 			},
-
 			_copyAddress: function(e) {
 				var form = this.closest('form');
 				if(this.is(':checked')) {
@@ -61,16 +59,25 @@ jQuery(document).ready(function($){
 	checkSessionAddresses();
 	
 	// order form submission
-	$("#OrderForm_OrderForm").submit(function() {
+	$("#OrderForm_OrderForm").submit(function(e) {
 		// check if a shipping and billing
-		if($("ul#shipping").find("li a.selectable").parent().parent().hasClass("selected")){
-			return true;
-		}else{
-			alert("Please select your shipping and billing address.")
-			$(".Actions .loading img").css("display", "none");
-			$(".Actions input#OrderForm_OrderForm_action_process").val("Proceed to pay");
-			return false;
+		if($("#shipping .selected").length > 0){
+			if($("#billing .callout").length > 0 || $('#BillToShippingAddress .checkbox').is(':checked')){
+				return true;
+			}
 		}
+		e.preventDefault();
+		if($('#alertMessagesText').length > 0){
+			var offset = $('#shipping').offset();
+			$("html, body").animate({scrollTop : (offset.top - 200)}, '500', 'swing', function(){
+				$('#alertMessagesText').html("<h2>Address error:</h2><p>Please enter or select your shipping and billing address before proceeding.</p>");
+				$('#alertMessages').foundation('reveal', 'open');
+			});
+		} else {
+			alert("Please select your shipping and billing address.");
+		}
+		$(".Actions .loading img").css("display", "none");
+		$("#OrderForm_OrderForm_action_process").val("Proceed to pay");
 	});
 
 	function refreshEventListeners(){
@@ -79,18 +86,17 @@ jQuery(document).ready(function($){
 
 		// manage shipping selections
 		$("#shipping .selectable").unbind('click');
-		$("#shipping .selectable").click(function(){
+		$("#shipping .selectable").click(function(e){
 			if($('.CheckoutPage').length > 0){
 				// set session shipping variable
 				$.post('checkout/setAddressID', {'ShippingAddressID' : $(this).attr('data-id')});
-			
 
-				$("#shipping").find( ".callout" ).removeClass("callout selected");
+				$("#shipping .callout").removeClass("callout selected");
 				$(this).parent().parent().addClass("callout selected");
-	
+				
 				var addressID = $(this).data("id"),
 					typeOfAddress = "shipping",
-					dataquery = { addressID: addressID, type: typeOfAddress };
+					dataquery = {addressID : addressID, type : typeOfAddress};
 				modal = $(this);
 	
 				$.ajax({
@@ -99,7 +105,6 @@ jQuery(document).ready(function($){
 					data: dataquery,
 					dataType : 'json',
 					success: function(data) {
-	
 						$('.address #address-shipping #ShippingFirstName input').val(data.FirstName);
 						$('.address #address-shipping #ShippingSurname input').val(data.Surname);
 						$('.address #address-shipping #ShippingCompany input').val(data.Company);
@@ -110,11 +115,15 @@ jQuery(document).ready(function($){
 						$('.address #address-shipping #ShippingState input').val(data.State);
 						$('.address #address-shipping #ShippingRegionCode select').val(data.RegionCode);
 						//$('.address #address-shipping #ShippingCity input').val(data.City);
-	
+						
 						//update cart
 						$('.order-form').entwine('sws').updateCart();
 					}
 				});
+				// Update the billing address if same checkbox checked
+				if($('#OrderForm_OrderForm_BillToShippingAddress').is(':checked')){
+					$('#OrderForm_OrderForm_BillToShippingAddress')._copyAddress(e);
+				}
 			}
 		});
 
@@ -127,7 +136,7 @@ jQuery(document).ready(function($){
 				// set session shipping variable
 				$.post('checkout/setAddressID', {'BillingAddressID' : $(this).attr('data-id')});
 				
-				$("#billing").find(".callout").removeClass("callout");
+				$("#billing .callout").removeClass("callout");
 				$(this).parent().parent().addClass("callout");
 	
 				var addressID = $(this).data("id");

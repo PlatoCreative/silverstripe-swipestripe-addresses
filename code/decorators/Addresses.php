@@ -73,6 +73,7 @@ class Addresses_Customer extends DataExtension {
 		// Find identical addresses
 		// If none exist then create a new address and set it as default
 		// Default is not used when comparing
+		/* REMOVED AS ADDRESSES ARE MANAGED ON THE CHECKOUTPAGE AS OBJECTS
 		$data = $order->toMap();
 		
 		// Set Firstname/Surname Fields on Member table
@@ -128,12 +129,11 @@ class Addresses_Customer extends DataExtension {
 		$billingAddress = Address_Billing::get()->filter(array('ID' => $billingID))->first();
 		$billingAddress = $billingAddress ? $billingAddress : Address_Billing::create($billingFields);
 		$billingAddress->write();
-		
+		*/
 		Session::clear('ShippingAddressID');
 		Session::clear('BillingAddressID');
-		
-		//TODO when a match is made then make that matched address the default now
 		/*
+		//TODO when a match is made then make that matched address the default now
 		$match = false;
 		foreach ($this->owner->ShippingAddresses() as $address) {
 
@@ -288,7 +288,7 @@ class Addresses_OrderForm extends Extension {
 		
 		$sameAsBilling = CompositeField::create(
 			CheckboxField::create('BillToShippingAddress', _t('CheckoutPage.SAME_ADDRESS', "Same as shipping address?"))
-				->addExtraClass('shipping-same-address')->setValue(0)
+				->addExtraClass('shipping-same-address')->setValue(0)->addExtraClass('left')
 		)->setID('SameBillingAddress')->setName('SameBillingAddress');
 		
 		$fields->push($shippingAddressFields);
@@ -297,6 +297,7 @@ class Addresses_OrderForm extends Extension {
 	}
 
 	public function updateValidator($validator) {
+		/*
 		$validator->appendRequiredFields(RequiredFields::create(
 			'ShippingFirstName',
 			'ShippingSurname',
@@ -309,6 +310,7 @@ class Addresses_OrderForm extends Extension {
 			'BillingCity',
 			'BillingCountryCode'
 		));
+		*/
 	}
 
 	public function updatePopulateFields(&$data) {

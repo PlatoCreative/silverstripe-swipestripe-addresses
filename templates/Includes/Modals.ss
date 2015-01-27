@@ -70,3 +70,13 @@
   </form>
   <a class="close-reveal-modal">&#215;</a>
 </div>
+
+<div id="alertMessages" class="reveal-modal" data-reveal>
+    <div class="row">
+      <div class="large-12 columns" id="alertMessagesText">
+        <h2></h2>
+		<p></p>
+      </div>
+    </div>
+  <a class="close-reveal-modal">&#215;</a>
+</div>

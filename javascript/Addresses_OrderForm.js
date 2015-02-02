@@ -13,21 +13,19 @@ jQuery(document).ready(function($){
 					self._copyAddress(e);
 				});
 
-				this._copyAddress();
-
+				//this._copyAddress();
 				this._super();
 			},
 			onunmatch: function() {
 				this._super();
 			},
 			_copyAddress: function(e) {
-				var form = this.closest('form');
-				if(this.is(':checked')) {
+				var form = $(this).closest('form');
+				if($(this).is(':checked')) {
 					$("#billing").find(".callout").removeClass("callout");
 					$('#address-shipping input[type=text], #address-shipping select', form).each(function(){
 						$('#' + $(this).attr('id').replace(/Shipping/i, 'Billing'))
 							.val($('#' + $(this).attr('id')).val());
-							//.parent().parent().hide(); // Removed and hidden with css instead
 					});
 				}
 				// Only clear fields if specifically unticking checkbox
@@ -118,12 +116,13 @@ jQuery(document).ready(function($){
 						
 						//update cart
 						$('.order-form').entwine('sws').updateCart();
+						
+						// Update the billing address if same checkbox checked
+						if($('#OrderForm_OrderForm_BillToShippingAddress').is(':checked')){
+							$('#OrderForm_OrderForm_BillToShippingAddress')._copyAddress(e);
+						}
 					}
 				});
-				// Update the billing address if same checkbox checked
-				if($('#OrderForm_OrderForm_BillToShippingAddress').is(':checked')){
-					$('#OrderForm_OrderForm_BillToShippingAddress')._copyAddress(e);
-				}
 			}
 		});
 

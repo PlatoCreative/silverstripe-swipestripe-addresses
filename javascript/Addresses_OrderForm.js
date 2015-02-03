@@ -29,7 +29,7 @@ jQuery(document).ready(function($){
 					});
 				}
 				// Only clear fields if specifically unticking checkbox
-				else if ($(e.currentTarget).attr('id') == this.attr('id')) {
+				else if ($(e.currentTarget).attr('id') == $(this).attr('id')) {
 					$('#address-shipping input[type=text], #address-shipping select', form).each(function(){
 						$('#' + $(this).attr('id').replace(/Shipping/i, 'Billing'))
 							.val('');
@@ -278,8 +278,12 @@ jQuery(document).ready(function($){
 				}
 
 				refreshEventListeners();
-
 				$('.reveal-modal').foundation('reveal', 'close');
+				
+				// Update the form
+				if(typeOfAddress == 'shipping'){		
+					$("#" + typeOfAddress + " .callout .selectable").click();
+				}
 			}
 		});
 

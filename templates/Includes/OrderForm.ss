@@ -53,6 +53,12 @@
 								<a href="javascript:;" data-id="{$ID}" data-type="shipping" class="delete-address"><span class="label warning">DELETE</span></a>
 							</p></div></li>
 						<% end_loop %>
+					<% else %>
+						<li>
+							<p class="panel address no-addresses">
+								You do not currently have any shipping addresses saved.
+							</p>
+						</li>
 					<% end_if %>
 					<li><a class="panel address add-new" data-reveal-id="addShippingAddress"><span>+</span></a></li>
 					</ul>
@@ -74,6 +80,12 @@
 								<a href="javascript:;" class="delete-address" data-id="{$ID}" data-type="billing"><span class="label warning">DELETE</span></a>
 							</p></div></li>
 						<% end_loop %>
+					<% else %>
+						<li>
+							<p class="panel address no-addresses">
+								You do not currently have any billing addresses saved.
+							</p>
+						</li>
 					<% end_if %>
 					<li><a class="panel address add-new" data-reveal-id="addBillingAddress"><span>+</span></a></li>
 					</ul>

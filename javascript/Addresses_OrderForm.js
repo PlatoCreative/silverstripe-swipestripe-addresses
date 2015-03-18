@@ -43,7 +43,7 @@ jQuery(document).ready(function($){
 	
 	// Check addresses if session saved
 	function checkSessionAddresses(){
-		if($('.CheckoutPage').length > 0){
+		if($('.CheckoutPage').length > 0 && $('#MemberLoginForm_LoginForm').length < 1){
 			var selectedAddresses = $.get('checkout/getAddressIDs', function(data){
 				if(data.ShippingID != ''){
 					$('.selectable[data-id="' + data.ShippingID + '"]').click();
@@ -181,13 +181,16 @@ jQuery(document).ready(function($){
 					success : function(data){
 						// if success
 						if(data == 1){
-
 							btn.addClass('deleting').find("span").html("DELETING");
 							setTimeout(function(){
 								// after a second or two remove the deleted item from the DOM
 								btn.closest( "li" ).remove();
+								
+								if($("ul#" + typeOfAddress + ' li').length <= 1){
+									var newAddressElement = '<li id="no-' + typeOfAddress + '-address"><p class="panel address no-addresses">You do not currently have any ' + typeOfAddress + ' addresses saved.</p></li>';
+									$("ul#" + typeOfAddress).prepend(newAddressElement);
+								}
 							}, 2000);
-
 						} else {
 							// silly animatation to show user something failed
 							btn.addClass('deleting').find("span").html("DELETING");
@@ -306,14 +309,21 @@ jQuery(document).ready(function($){
 			dataType : 'json',
 			success: function(data) {
 				var newAddressElement = '<li><div class="panel address"><p><a href="javascript:;" data-id="' + data.ID + '" class="selectable">' + data.Address + '<br>' + data.City + '</a><br><br><a href="javascript:;" data-id="' + data.ID + '" class="edit-address" data-reveal-id="' + typeOfAddress + 'AddressModal" data-type="' + typeOfAddress + '"><span class="label success">EDIT</span></a> <a href="javascript:;" data-id="' + data.ID + '" data-type="' + typeOfAddress + '" class="delete-address"><span class="label warning">DELETE</span></a></p></div></li>';
-
+				
 				// add new address to the DOM so no reload is required.
 				if(typeOfAddress == "shipping"){
+					if($('#no-shipping-address').length > 0){
+						$('#no-shipping-address').remove();
+					}
 					$("ul#shipping").prepend(newAddressElement);
-				}else{
+				} else {
+					if($('#no-billing-address').length > 0){
+						$('#no-billing-address').remove();
+					}
 					$("ul#billing").prepend(newAddressElement);
 				}
 				refreshEventListeners();
+				$('a.selectable[data-id="' + data.ID + '"]').click();
 
 				$('.reveal-modal').foundation('reveal', 'close');
 			}

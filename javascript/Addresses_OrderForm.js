@@ -27,6 +27,8 @@ jQuery(document).ready(function($){
 						$('#' + $(this).attr('id').replace(/Shipping/i, 'Billing'))
 							.val($('#' + $(this).attr('id')).val());
 					});
+					// set session shipping variable
+					$.post('checkout/setAddressID', {'BillingAddressID' : ''});
 				}
 				// Only clear fields if specifically unticking checkbox
 				else if ($(e.currentTarget).attr('id') == $(this).attr('id')) {
@@ -41,7 +43,8 @@ jQuery(document).ready(function($){
 
 	});
 	
-	// Check addresses if session saved
+	// Check addresses if session saved - MOVED TO PHP INSTEAD
+	/*
 	function checkSessionAddresses(){
 		if($('.CheckoutPage').length > 0 && $('#MemberLoginForm_LoginForm').length < 1){
 			var selectedAddresses = $.get('checkout/getAddressIDs', function(data){
@@ -55,6 +58,7 @@ jQuery(document).ready(function($){
 		}
 	}
 	checkSessionAddresses();
+	*/
 	
 	// order form submission
 	$("#OrderForm_OrderForm").submit(function(e) {

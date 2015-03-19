@@ -45,13 +45,17 @@
 					<ul id="shipping" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 					<% if ShippingAddresses %>
 						<% loop ShippingAddresses %>
-							<li><div class="panel address"><p>
-								<a href="javascript:;" data-id="{$ID}" class="selectable">
-								$Address<br />
-								$City</a><br /><br />
-								<a href="javascript:;" class="edit-address" data-id="{$ID}" data-type="shipping" data-reveal-id="shippingAddressModal"><span class="label success">EDIT</span></a>
-								<a href="javascript:;" data-id="{$ID}" data-type="shipping" class="delete-address"><span class="label warning">DELETE</span></a>
-							</p></div></li>
+							<li>
+								<div class="panel address <% if Top.getSessionAddress('shipping').ID == $ID %>callout selected<% end_if %>">
+									<p>
+										<a href="javascript:;" data-id="{$ID}" class="selectable">
+										$Address<br />
+										$City</a><br /><br />
+										<a href="javascript:;" class="edit-address" data-id="{$ID}" data-type="shipping" data-reveal-id="shippingAddressModal"><span class="label success">EDIT</span></a>
+										<a href="javascript:;" data-id="{$ID}" data-type="shipping" class="delete-address"><span class="label warning">DELETE</span></a>
+									</p>
+								</div>
+							</li>
 						<% end_loop %>
 					<% else %>
 						<li id="no-shipping-address">
@@ -72,13 +76,17 @@
 					<ul id="billing" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 					<% if BillingAddresses %>
 						<% loop BillingAddresses %>
-							<li><div class="panel address"><p>
-								<a href="javascript:;" data-id="{$ID}" class="selectable">
-								$Address<br />
-								$City</a><br /><br />
-								<a href="javascript:;" class="edit-address" data-id="{$ID}" data-reveal-id="billingAddressModal"><span class="label success">EDIT</span></a>
-								<a href="javascript:;" class="delete-address" data-id="{$ID}" data-type="billing"><span class="label warning">DELETE</span></a>
-							</p></div></li>
+							<li>
+								<div class="panel address <% if Top.getSessionAddress('billing').ID == $ID %>callout<% end_if %>">
+									<p>
+										<a href="javascript:;" data-id="{$ID}" class="selectable">
+										$Address<br />
+										$City</a><br /><br />
+										<a href="javascript:;" class="edit-address" data-id="{$ID}" data-reveal-id="billingAddressModal"><span class="label success">EDIT</span></a>
+										<a href="javascript:;" class="delete-address" data-id="{$ID}" data-type="billing"><span class="label warning">DELETE</span></a>
+									</p>
+								</div>
+							</li>
 						<% end_loop %>
 					<% else %>
 						<li id="no-billing-address">

@@ -42,7 +42,7 @@ jQuery(document).ready(function($){
 		});
 
 	});
-	
+
 	// Check addresses if session saved - MOVED TO PHP INSTEAD
 	/*
 	function checkSessionAddresses(){
@@ -50,16 +50,16 @@ jQuery(document).ready(function($){
 			var selectedAddresses = $.get('checkout/getAddressIDs', function(data){
 				if(data.ShippingID != ''){
 					$('.selectable[data-id="' + data.ShippingID + '"]').click();
-				}			
+				}
 				if(data.BillingID != ''){
-					$('.selectable[data-id="' + data.BillingID + '"]').click();					
+					$('.selectable[data-id="' + data.BillingID + '"]').click();
 				}
 			}, 'json');
 		}
 	}
 	checkSessionAddresses();
 	*/
-	
+
 	// order form submission
 	$("#OrderForm_OrderForm").submit(function(e) {
 		// check if a shipping and billing
@@ -95,12 +95,12 @@ jQuery(document).ready(function($){
 
 				$("#shipping .callout").removeClass("callout selected");
 				$(this).parent().parent().addClass("callout selected");
-				
+
 				var addressID = $(this).data("id"),
 					typeOfAddress = "shipping",
 					dataquery = {addressID : addressID, type : typeOfAddress};
 				modal = $(this);
-	
+
 				$.ajax({
 					type: "GET",
 					url : "account/getAddress",
@@ -117,10 +117,10 @@ jQuery(document).ready(function($){
 						$('.address #address-shipping #ShippingState input').val(data.State);
 						$('.address #address-shipping #ShippingRegionCode select').val(data.RegionCode);
 						//$('.address #address-shipping #ShippingCity input').val(data.City);
-						
+
 						//update cart
 						$('.order-form').entwine('sws').updateCart();
-						
+
 						// Update the billing address if same checkbox checked
 						if($('#OrderForm_OrderForm_BillToShippingAddress').is(':checked')){
 							$('#OrderForm_OrderForm_BillToShippingAddress')._copyAddress(e);
@@ -135,18 +135,18 @@ jQuery(document).ready(function($){
 		$("#billing .selectable").click(function(){
 			if($('.CheckoutPage').length > 0){
 				$('#OrderForm_OrderForm_BillToShippingAddress').attr('checked', false);
-				
+
 				// set session shipping variable
 				$.post('checkout/setAddressID', {'BillingAddressID' : $(this).attr('data-id')});
-				
+
 				$("#billing .callout").removeClass("callout");
 				$(this).parent().parent().addClass("callout");
-	
+
 				var addressID = $(this).data("id");
 				var typeOfAddress = "billing";
 				var dataquery = { addressID: addressID, type: typeOfAddress };
 				modal = $(this);
-	
+
 				$.ajax({
 					type: "GET",
 					url : "account/getAddress",
@@ -185,11 +185,11 @@ jQuery(document).ready(function($){
 					success : function(data){
 						// if success
 						if(data == 1){
-							btn.addClass('deleting').find("span").html("DELETING");
+							btn.addClass('deleting').find("span").html("Deleting");
 							setTimeout(function(){
 								// after a second or two remove the deleted item from the DOM
 								btn.closest( "li" ).remove();
-								
+
 								if($("ul#" + typeOfAddress + ' li').length <= 1){
 									var newAddressElement = '<li id="no-' + typeOfAddress + '-address"><p class="panel address no-addresses">You do not currently have any ' + typeOfAddress + ' addresses saved.</p></li>';
 									$("ul#" + typeOfAddress).prepend(newAddressElement);
@@ -197,7 +197,7 @@ jQuery(document).ready(function($){
 							}, 2000);
 						} else {
 							// silly animatation to show user something failed
-							btn.addClass('deleting').find("span").html("DELETING");
+							btn.addClass('deleting').find("span").html("Deleting");
 							setTimeout(function(){
 								btn.find("span")
 									.animate({'left':(+10)+'px'},200)
@@ -221,7 +221,7 @@ jQuery(document).ready(function($){
 				typeOfAddress = $(this).data("type"),
 				dataquery = {'addressID' : addressesID, 'type' : typeOfAddress};
 			modal = $(this);
-			
+
 			$.ajax({
 				type: "GET",
 				url : "account/getAddress",
@@ -286,9 +286,9 @@ jQuery(document).ready(function($){
 
 				refreshEventListeners();
 				$('.reveal-modal').foundation('reveal', 'close');
-				
+
 				// Update the form
-				if(typeOfAddress == 'shipping'){		
+				if(typeOfAddress == 'shipping'){
 					$("#" + typeOfAddress + " .callout .selectable").click();
 				}
 			}
@@ -305,7 +305,7 @@ jQuery(document).ready(function($){
 		var dataString = $(this).serializeArray(),
 			typeOfAddress = $(this).data("type");
 		dataString.push({ name: "type", value: typeOfAddress });
-		
+
 		$.ajax({
 			type: "POST",
 			url : "account/addAddress",
@@ -313,7 +313,7 @@ jQuery(document).ready(function($){
 			dataType : 'json',
 			success: function(data) {
 				var newAddressElement = '<li><div class="panel address"><p><a href="javascript:;" data-id="' + data.ID + '" class="selectable">' + data.Address + '<br>' + data.City + '</a><br><br><a href="javascript:;" data-id="' + data.ID + '" class="edit-address" data-reveal-id="' + typeOfAddress + 'AddressModal" data-type="' + typeOfAddress + '"><span class="label success">EDIT</span></a> <a href="javascript:;" data-id="' + data.ID + '" data-type="' + typeOfAddress + '" class="delete-address"><span class="label warning">DELETE</span></a></p></div></li>';
-				
+
 				// add new address to the DOM so no reload is required.
 				if(typeOfAddress == "shipping"){
 					if($('#no-shipping-address').length > 0){

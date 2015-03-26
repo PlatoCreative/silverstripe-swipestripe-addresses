@@ -9,7 +9,7 @@
     </div>
     <div class="row">
       <div class="large-12 text-right columns">
-        <input type="submit" class="button tiny radius" value="Save" />
+        <input type="submit" class="button btn" value="Save" />
       </div>
     </div>
   </form>
@@ -27,7 +27,7 @@
     </div>
     <div class="row">
       <div class="large-12 text-right columns">
-        <input type="submit" class="button tiny radius" value="Save" />
+        <input type="submit" class="button btn" value="Save" />
       </div>
     </div>
   </form>
@@ -46,7 +46,7 @@
     </div>
     <div class="row">
       <div class="large-12 text-right columns">
-        <input type="submit" class="submit button tiny radius" value="Save" />
+        <input type="submit" class="submit button btn" value="Save" />
       </div>
     </div>
   </form>
@@ -64,7 +64,7 @@
     </div>
     <div class="row">
       <div class="large-12 text-right columns">
-        <input type="submit" class="button tiny radius" value="Save" />
+        <input type="submit" class="button btn" value="Save" />
       </div>
     </div>
   </form>

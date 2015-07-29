@@ -276,7 +276,7 @@ class Addresses_OrderForm extends Extension {
 	// Return the form fields empty
 	public function EmptyShippingAddressFields() {
 		$fields = $this->owner->ShippingAddressFields();
-		foreach($fields->FieldList()->dataFields() as &$field){
+		foreach($fields->FieldList()->dataFields() as $field){
 			$field->setValue('');
 		}
 		return $fields;
@@ -290,7 +290,7 @@ class Addresses_OrderForm extends Extension {
 	// Return the form fields empty
 	public function EmptyBillingAddressFields() {
 		$fields = $this->owner->BillingAddressFields();
-		foreach($fields->FieldList()->dataFields() as &$field){
+		foreach($fields->FieldList()->dataFields() as $field){
 			$field->setValue('');
 		}
 		return $fields;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Represents a shipping or billing address which are both attached to {@link Order}.
- * 
+ *
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
@@ -11,7 +11,7 @@ class Address extends DataObject {
 
 	/**
 	 * DB fields for an address
-	 * 
+	 *
 	 * @var Array
 	 */
 	private static $db = array(
@@ -27,18 +27,18 @@ class Address extends DataObject {
 
 		//De-normalise these values in case region or country is deleted
 		'CountryName' => 'Varchar',
-		'CountryCode' => 'Varchar(2)', //ISO 3166 
+		'CountryCode' => 'Varchar(2)', //ISO 3166
 		'RegionName' => 'Varchar',
 		'RegionCode' => 'Varchar(2)'
 	);
 
 	/**
 	 * Relations for address
-	 * 
+	 *
 	 * @var Array
 	 */
 	private static $has_one = array(
-		'Member' => 'Customer',  
+		'Member' => 'Customer',
 		'Country' => 'Country',
 		'Region' => 'Region'
 	);
@@ -58,7 +58,7 @@ class Address extends DataObject {
 			}
 		}
 	}
-	
+
 }
 
 class Address_Shipping extends Address {
@@ -67,9 +67,7 @@ class Address_Shipping extends Address {
 		parent::onBeforeWrite();
 
 		$code = $this->CountryCode;
-		$country = Country_Shipping::get()
-			->where("\"Code\" = '$code'")
-			->first();
+		$country = Country_Shipping::get()->filter(array('Code' => $code))->first();
 
 		if ($country && $country->exists()) {
 			$this->CountryName = $country->Title;
@@ -77,26 +75,35 @@ class Address_Shipping extends Address {
 		}
 
 		$code = $this->RegionCode;
-		$region = Region_Shipping::get()
-			->where("\"Code\" = '$code'")
-			->first();
+		$region = Region_Shipping::get()->filter(array('Code' => $code))->first();
 
 		if ($region && $region->exists()) {
 			$this->RegionName = $region->Title;
 			$this->RegionID = $region->ID;
+		}
+
+		// Reset the default values
+		if($this->Default){
+			$customer = Member::currentUser();
+			$addresses = $customer ? $customer->ShippingAddresses()->filter(array('Default' => 1)) : null;
+			foreach($addresses as $address){
+				$address->Default = 0;
+				$address->write();
+			}
+			$this->Default = 1;
 		}
 	}
 
 	/**
 	 * Return data in an Array with keys formatted to match the field names
 	 * on the checkout form so that it can be loaded into an order form.
-	 * 
+	 *
 	 * @see Form::loadDataFrom()
 	 * @return Array Data for loading into the form
 	 */
 	public function getCheckoutFormData() {
 		$formattedData = array();
-		
+
 		$formattedData['ShippingFirstName'] = $this->FirstName;
 		$formattedData['ShippingSurname'] = $this->Surname;
 		$formattedData['ShippingCompany'] = $this->Company;
@@ -107,7 +114,8 @@ class Address_Shipping extends Address {
 		$formattedData['ShippingState'] = $this->State;
 		$formattedData['ShippingCountryCode'] = $this->CountryCode;
 		$formattedData['ShippingRegionCode'] = $this->RegionCode;
-		
+		$formattedData['ShippingDefault'] = $this->Default;
+
 		return $formattedData;
 	}
 }
@@ -118,26 +126,35 @@ class Address_Billing extends Address {
 		parent::onBeforeWrite();
 
 		$code = $this->CountryCode;
-		$country = Country_Billing::get()
-			->where("\"Code\" = '$code'")
-			->first();
+		$country = Country_Billing::get()->filter(array('Code' => $code))->first();
 
 		if ($country && $country->exists()) {
 			$this->CountryName = $country->Title;
 			$this->CountryID = $country->ID;
+		}
+
+		// Reset the default values
+		if($this->Default){
+			$customer = Member::currentUser();
+			$addresses = $customer ? $customer->BillingAddresses()->filter(array('Default' => 1)) : null;
+			foreach($addresses as $address){
+				$address->Default = 0;
+				$address->write();
+			}
+			$this->Default = 1;
 		}
 	}
 
 	/**
 	 * Return data in an Array with keys formatted to match the field names
 	 * on the checkout form so that it can be loaded into an order form.
-	 * 
+	 *
 	 * @see Form::loadDataFrom()
 	 * @return Array Data for loading into the form
 	 */
 	public function getCheckoutFormData() {
 		$formattedData = array();
-		
+
 		$formattedData['BillingFirstName'] = $this->FirstName;
 		$formattedData['BillingSurname'] = $this->Surname;
 		$formattedData['BillingCompany'] = $this->Company;
@@ -147,7 +164,8 @@ class Address_Billing extends Address {
 		$formattedData['BillingPostalCode'] = $this->PostalCode;
 		$formattedData['BillingState'] = $this->State;
 		$formattedData['BillingCountryCode'] = $this->CountryCode;
-		
+		$formattedData['BillingDefault'] = $this->Default;
+
 		return $formattedData;
 	}
 }

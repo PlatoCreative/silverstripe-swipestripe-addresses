@@ -35,17 +35,17 @@ class Addresses_Order extends DataExtension {
 
 	public function onBeforeWrite() {
 		//Update address names
-		$country = Country_Shipping::get()->where("\"Code\" = '{$this->owner->ShippingCountryCode}'")->first();
+		$country = Country_Shipping::get()->filter(array('Code' => $this->owner->ShippingCountryCode))->first();
 		if ($country && $country->exists()){
 			$this->owner->ShippingCountryName = $country->Title;
 		}
 
-		$region = Region_Shipping::get()->where("\"Code\" = '{$this->owner->ShippingRegionCode}'")->first();
+		$region = Region_Shipping::get()->filter(array('Code' => $this->owner->ShippingRegionCode))->first();
 		if ($region && $region->exists()){
 			$this->owner->ShippingRegionName = $region->Title;
 		}
 
-		$country = Country_Billing::get()->where("\"Code\" = '{$this->owner->BillingCountryCode}'")->first();
+		$country = Country_Billing::get()->filter(array('Code' => $this->owner->BillingCountryCode))->first();
 		if ($country && $country->exists()){
 			$this->owner->BillingCountryName = $country->Title;
 		}
@@ -70,103 +70,8 @@ class Addresses_Customer extends DataExtension {
 	);
 
 	public function createAddresses($order) {
-		// Find identical addresses
-		// If none exist then create a new address and set it as default
-		// Default is not used when comparing
-		/* REMOVED AS ADDRESSES ARE MANAGED ON THE CHECKOUTPAGE AS OBJECTS
-		$data = $order->toMap();
-
-		// Set Firstname/Surname Fields on Member table
-		if(!$this->owner->FirstName) {
-			$this->owner->FirstName = $data['ShippingFirstName'];
-			$this->owner->write();
-		}
-		if(!$this->owner->Surname) {
-			$this->owner->Surname = $data['ShippingSurname'];
-			$this->owner->write();
-		}
-
-		$shippingFields = array(
-			'MemberID' => $this->owner->ID,
-			'FirstName' => isset($data['ShippingFirstName']) ? $data['ShippingFirstName'] : null,
-			'Surname' => isset($data['ShippingSurname']) ? $data['ShippingSurname'] : null,
-			'Company' => isset($data['ShippingCompany']) ? $data['ShippingCompany'] : null,
-			'Address' => isset($data['ShippingAddress']) ? $data['ShippingAddress'] : null,
-			'AddressLine2' => isset($data['ShippingAddressLine2']) ? $data['ShippingAddressLine2'] : null,
-			'City' => isset($data['ShippingCity']) ? $data['ShippingCity'] : null,
-			'PostalCode' => isset($data['ShippingPostalCode']) ? $data['ShippingPostalCode'] : null,
-			'State' => isset($data['ShippingState']) ? $data['ShippingState'] : null,
-			'CountryName' => isset($data['ShippingCountryName']) ? $data['ShippingCountryName'] : null,
-			'CountryCode' => isset($data['ShippingCountryCode']) ? $data['ShippingCountryCode'] : null,
-			'RegionName' => isset($data['ShippingRegionName']) ? $data['ShippingRegionName'] : null,
-			'RegionCode' => isset($data['ShippingRegionCode']) ? $data['ShippingRegionCode'] : null,
-		);
-
-		$billingFields = array(
-			'MemberID' => $this->owner->ID,
-			'FirstName' => isset($data['BillingFirstName']) ? $data['BillingFirstName'] : null,
-			'Surname' => isset($data['BillingSurname']) ? $data['BillingSurname'] : null,
-			'Company' => isset($data['BillingCompany']) ? $data['BillingCompany'] : null,
-			'Address' => isset($data['BillingAddress']) ? $data['BillingAddress'] : null,
-			'AddressLine2' => isset($data['BillingAddressLine2']) ? $data['BillingAddressLine2'] : null,
-			'City' => isset($data['BillingCity']) ? $data['BillingCity'] : null,
-			'PostalCode' => isset($data['BillingPostalCode']) ? $data['BillingPostalCode'] : null,
-			'State' => isset($data['BillingState']) ? $data['BillingState'] : null,
-			'CountryName' => isset($data['BillingCountryName']) ? $data['BillingCountryName'] : null,
-			'CountryCode' => isset($data['BillingCountryCode']) ? $data['BillingCountryCode'] : null,
-			'RegionName' => isset($data['BillingRegionName']) ? $data['ShippingRegionName'] : null,
-			'RegionCode' => isset($data['BillingRegionCode']) ? $data['ShippingRegionCode'] : null,
-		);
-
-		$shippingID = Session::get('ShippingAddressID');
-		$billingID = Session::get('BillingAddressID');
-
-		//Look for existing addresses or create a new one if needed
-		$shippingAddress = Address_Shipping::get()->filter(array('ID' => $shippingID))->first();
-		$shippingAddress = $shippingAddress ? $shippingAddress : Address_Shipping::create($shippingFields);
-		$shippingAddress->write();
-
-		$billingAddress = Address_Billing::get()->filter(array('ID' => $billingID))->first();
-		$billingAddress = $billingAddress ? $billingAddress : Address_Billing::create($billingFields);
-		$billingAddress->write();
-		*/
 		Session::clear('ShippingAddressID');
 		Session::clear('BillingAddressID');
-		/*
-		//TODO when a match is made then make that matched address the default now
-		$match = false;
-		foreach ($this->owner->ShippingAddresses() as $address) {
-
-			$existing = $address->toMap();
-			$new = $shippingAddress->toMap();
-			$result = array_intersect_assoc($existing, $new);
-
-			//If no difference, then match is found
-			$diff = array_diff_assoc($new, $result);
-			$match = empty($diff);
-		}
-
-		if (!$match) {
-			$shippingAddress->Default = 0;
-			$shippingAddress->write();
-		}
-
-		$match = false;
-		foreach ($this->owner->BillingAddresses() as $address) {
-
-			$existing = $address->toMap();
-			$new = $billingAddress->toMap();
-			$result = array_intersect_assoc($existing, $new);
-
-			$diff = array_diff_assoc($new, $result);
-			$match = empty($diff);
-		}
-
-		if (!$match) {
-			$billingAddress->Default = 0;
-			$billingAddress->write();
-		}
-		*/
 	}
 
 	/**
@@ -175,17 +80,13 @@ class Addresses_Customer extends DataExtension {
 	 *
 	 * @return Address The last billing address
 	 */
-	public function BillingAddress($addressID=null) {
+	public function BillingAddress($addressID = null) {
 		$addrs = $this->owner->BillingAddresses();
-		if ($addrs && $addrs->exists()) {
-			if ($addressID > 0){
-				return $addrs
-				->where("ID",$addressID)
-				->first();
+		if($addrs && $addrs->exists()) {
+			if($addressID > 0){
+				return $addrs->filter(array('ID' => $addressID))->first();
 			} else {
-				return $addrs
-				->where("\"Default\" = 1")
-				->first();
+				return $addrs->filter(array('Default' => 1))->first();
 			}
 		}
 		return null;
@@ -197,17 +98,13 @@ class Addresses_Customer extends DataExtension {
 	 *
 	 * @return Address The last shipping address
 	 */
-	public function ShippingAddress($addressID=null) {
+	public function ShippingAddress($addressID = null) {
 		$addrs = $this->owner->ShippingAddresses();
 		if ($addrs && $addrs->exists()) {
 			if ($addressID > 0){
-				return $addrs
-				->where("ID",$addressID)
-				->first();
+				return $addrs->filter(array('ID' => $addressID))->first();
 			} else {
-				return $addrs
-				->where("\"Default\" = 1")
-				->first();
+				return $addrs->filter(array('Default' => 1))->first();
 			}
 		}
 		return null;
@@ -219,21 +116,9 @@ class Addresses_Customer extends DataExtension {
 */
 class Addresses_OrderForm extends Extension {
 
-	public function updateFields($fields) {
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-validate/jquery.validate.min.js');
-		Requirements::javascript('swipestripe-addresses/javascript/Addresses_OrderForm.js');
-
+ 	public function ShippingAddressFields(){
 		$shippingAddSession = self::SessionAddress('shipping');
-
 		$currentUser = Member::currentUser();
-		//if($currentUser && $currentUser->BillingAddresses()->count() < 1){
-		if(!self::SessionAddress('billing')){
-			$billingAddSession = $shippingAddSession;
-		} else {
-			$billingAddSession = self::SessionAddress('billing');
-		}
 
 		$shippingAddressFields = CompositeField::create(
 			HeaderField::create(_t('CheckoutPage.SHIPPING_ADDRESS',"Shipping Address"), 3),
@@ -261,8 +146,21 @@ class Addresses_OrderForm extends Extension {
 				)
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_COUNTRY',"Please enter a country."))
 				->addExtraClass('country-code')
-				->setValue($shippingAddSession ? $shippingAddSession->CountryCode : '')
+				->setValue($shippingAddSession ? $shippingAddSession->CountryCode : ''),
+			CheckboxField::create('ShippingDefault', 'Default shipping address?')
 		)->setID('ShippingAddress')->setName('ShippingAddress');
+
+		return $shippingAddressFields;
+	}
+
+	public function BillingAddressFields(){
+		$shippingAddSession = self::SessionAddress('shipping');
+
+		if(!self::SessionAddress('billing')){
+			$billingAddSession = $shippingAddSession;
+		} else {
+			$billingAddSession = self::SessionAddress('billing');
+		}
 
 		$billingAddressFields = CompositeField::create(
 			HeaderField::create(_t('CheckoutPage.BILLINGADDRESS',"Billing Address"), 3),
@@ -288,20 +186,52 @@ class Addresses_OrderForm extends Extension {
 					_t('CheckoutPage.COUNTRY',"Country"),
 					Country_Billing::get()->map('Code', 'Title')->toArray()
 				)->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCOUNTRY', "Please enter your country."))
-				->setValue($billingAddSession ? $billingAddSession->CountryCode : '')
+				->setValue($billingAddSession ? $billingAddSession->CountryCode : ''),
+			CheckboxField::create('BillingDefault', 'Default billing address?')
 		)->setID('BillingAddress')->setName('BillingAddress');
 
-		$sameAsBilling = CompositeField::create(
-			CheckboxField::create('BillToShippingAddress', _t('CheckoutPage.SAME_ADDRESS', "Same as shipping address?"))
-				->addExtraClass('shipping-same-address')
-				// Check made here instead of updatePopulateField()
-				->setValue(($billingAddSession && $shippingAddSession && $billingAddSession->ID != $shippingAddSession->ID) ? 0 : 1)
-				->addExtraClass('left')
-		)->setID('SameBillingAddress')->setName('SameBillingAddress');
+		return $billingAddressFields;
+	}
 
-		$fields->push($shippingAddressFields);
-		$fields->push($billingAddressFields);
-		$fields->push($sameAsBilling);
+	public function updateFields($fields) {
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-validate/jquery.validate.min.js');
+		Requirements::javascript('swipestripe-addresses/javascript/Addresses_OrderForm.js');
+
+		$shippingAddSession = self::SessionAddress('shipping');
+
+		$currentUser = Member::currentUser();
+		if($currentUser){
+			if(!self::SessionAddress('billing')){
+				$billingAddSession = $shippingAddSession;
+			} else {
+				$billingAddSession = self::SessionAddress('billing');
+			}
+
+			// Moved CompositeField generation to separate functions
+			$shippingAddressFields = $this->owner->ShippingAddressFields();
+			$billingAddressFields = $this->owner->BillingAddressFields();
+
+			$defaultBilling = $currentUser->BillingAddresses()->filter(array('Default' => 1));
+			if($billingAddSession && $shippingAddSession && $billingAddSession->ID != $shippingAddSession->ID || $defaultBilling->Count() > 0){
+				$sameChecked = false;
+			} else {
+				$sameChecked = true;
+			}
+
+			$sameAsBilling = CompositeField::create(
+				CheckboxField::create('BillToShippingAddress', _t('CheckoutPage.SAME_ADDRESS', "Same as shipping address?"))
+					->addExtraClass('shipping-same-address')
+					// Check made here instead of updatePopulateField()
+					->setValue($sameChecked)
+					->addExtraClass('left')
+			)->setID('SameBillingAddress')->setName('SameBillingAddress');
+
+			$fields->push($shippingAddressFields);
+			$fields->push($billingAddressFields);
+			$fields->push($sameAsBilling);
+		}
 	}
 
 	public function updateValidator($validator) {
@@ -325,23 +255,11 @@ class Addresses_OrderForm extends Extension {
 		$member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
 
 		$shippingAddress = $member->ShippingAddress();
-		$shippingAddressData = ($shippingAddress && $shippingAddress->exists())
-			? $shippingAddress->getCheckoutFormData()
-			: array();
+		$shippingAddressData = ($shippingAddress && $shippingAddress->exists()) ? $shippingAddress->getCheckoutFormData() : array();
 		unset($shippingAddressData['ShippingRegionCode']); // Not available billing address option
 
 		$billingAddress = $member->BillingAddress();
-		$billingAddressData = ($billingAddress && $billingAddress->exists())
-			? $billingAddress->getCheckoutFormData()
-			: array();
-
-		// If billing address is a subset of shipping address, consider them equal
-		/*
-		$intersect = array_intersect(array_values($shippingAddressData), array_values($billingAddressData));
-		if(array_values($intersect) == array_values($billingAddressData)){
-			$billingAddressData['BillToShippingAddress'] = true;
-		}
-		*/
+		$billingAddressData = ($billingAddress && $billingAddress->exists()) ? $billingAddress->getCheckoutFormData() : array();
 
 		$data = array_merge(
 			$data,
@@ -351,11 +269,31 @@ class Addresses_OrderForm extends Extension {
 	}
 
 	public function getShippingAddressFields() {
-		return $this->owner->Fields()->fieldByName('ShippingAddress');
+		$fields = $this->owner->Fields()->fieldByName('ShippingAddress');
+		return $fields;
+	}
+
+	// Return the form fields empty
+	public function EmptyShippingAddressFields() {
+		$fields = $this->owner->ShippingAddressFields();
+		foreach($fields->FieldList()->dataFields() as &$field){
+			$field->setValue('');
+		}
+		return $fields;
 	}
 
 	public function getBillingAddressFields() {
-		return $this->owner->Fields()->fieldByName('BillingAddress');
+		$fields = $this->owner->Fields()->fieldByName('BillingAddress');
+		return $fields;
+	}
+
+	// Return the form fields empty
+	public function EmptyBillingAddressFields() {
+		$fields = $this->owner->BillingAddressFields();
+		foreach($fields->FieldList()->dataFields() as &$field){
+			$field->setValue('');
+		}
+		return $fields;
 	}
 
 	public function getSameBillingAddressFields() {
@@ -363,8 +301,12 @@ class Addresses_OrderForm extends Extension {
 	}
 
 	public function SessionAddress($type = 'shipping'){
-		$ShippingID = Session::get('ShippingAddressID') ? Session::get('ShippingAddressID') : false;
-		$BillingID = Session::get('BillingAddressID') ? Session::get('BillingAddressID') : false;
+		$customer = Member::currentUser();
+		$shippingAddress = $customer ? $customer->ShippingAddresses()->filter(array('Default' => 1))->first() : null;
+		$billingAddress = $customer ? $customer->BillingAddresses()->filter(array('Default' => 1))->first() : null;
+
+		$ShippingID = Session::get('ShippingAddressID') ? Session::get('ShippingAddressID') : ($shippingAddress ? $shippingAddress->ID : false);
+		$BillingID = Session::get('BillingAddressID') ? Session::get('BillingAddressID') : ($billingAddress ? $billingAddress->ID : false);
 		$address = false;
 
 		if($type == 'shipping' && $ShippingID){
@@ -435,7 +377,6 @@ class Addresses_CountriesAdmin extends ShopAdmin {
 	}
 
 	public function Countries($request) {
-
 		if ($request->isAjax()) {
 			$controller = $this;
 			$responseNegotiator = new PjaxResponseNegotiator(
@@ -462,7 +403,6 @@ class Addresses_CountriesAdmin extends ShopAdmin {
 	}
 
 	public function CountriesForm() {
-
 		$shopConfig = ShopConfig::get()->First();
 
 		$fields = new FieldList(

@@ -13,52 +13,32 @@ jQuery(document).ready(function($){
 					self._copyAddress(e);
 				});
 
-				//this._copyAddress();
 				this._super();
 			},
 			onunmatch: function() {
 				this._super();
 			},
 			_copyAddress: function(e) {
-				var form = $(this).closest('form');
+				var form = $(this).closest('form'),
+					formID = form.attr('ID');
 				if($(this).is(':checked')) {
 					$("#billing").find(".callout").removeClass("callout");
-					$('#address-shipping input[type=text], #address-shipping select', form).each(function(){
-						$('#' + $(this).attr('id').replace(/Shipping/i, 'Billing'))
-							.val($('#' + $(this).attr('id')).val());
+					$('#' + formID + ' #address-shipping input[type=text], #' + formID + ' #address-shipping select', form).each(function(){
+						$('#' + $(this).attr('id').replace(/Shipping/i, 'Billing')).val($('#' + $(this).attr('id')).val());
 					});
 					// set session shipping variable
 					$.post('checkout/setAddressID', {'BillingAddressID' : ''});
 				}
 				// Only clear fields if specifically unticking checkbox
 				else if ($(e.currentTarget).attr('id') == $(this).attr('id')) {
-					$('#address-shipping input[type=text], #address-shipping select', form).each(function(){
-						$('#' + $(this).attr('id').replace(/Shipping/i, 'Billing'))
-							.val('');
+					$('#' + formID + ' #address-shipping input[type=text], #' + formID + ' #address-shipping select', form).each(function(){
+						$('#' + $(this).attr('id').replace(/Shipping/i, 'Billing')).val('');
 							//.parent().parent().show(); // Removed and hidden with css instead
 					});
 				}
 			}
 		});
-
 	});
-
-	// Check addresses if session saved - MOVED TO PHP INSTEAD
-	/*
-	function checkSessionAddresses(){
-		if($('.CheckoutPage').length > 0 && $('#MemberLoginForm_LoginForm').length < 1){
-			var selectedAddresses = $.get('checkout/getAddressIDs', function(data){
-				if(data.ShippingID != ''){
-					$('.selectable[data-id="' + data.ShippingID + '"]').click();
-				}
-				if(data.BillingID != ''){
-					$('.selectable[data-id="' + data.BillingID + '"]').click();
-				}
-			}, 'json');
-		}
-	}
-	checkSessionAddresses();
-	*/
 
 	// order form submission
 	$("#OrderForm_OrderForm").submit(function(e) {
@@ -83,9 +63,6 @@ jQuery(document).ready(function($){
 	});
 
 	function refreshEventListeners(){
-		// hide normal form but keep it on the page
-		//$(".customer-addresses").hide();
-
 		// manage shipping selections
 		$("#shipping .selectable").unbind('click');
 		$("#shipping .selectable").click(function(e){
@@ -117,7 +94,7 @@ jQuery(document).ready(function($){
 						$('.address #address-shipping #ShippingState input').val(data.State);
 						$('.address #address-shipping #ShippingRegionCode select').val(data.RegionCode);
 						//$('.address #address-shipping #ShippingCity input').val(data.City);
-
+						$('.address #address-shipping #ShippingDefault input').prop('checked', (data.Default > 0 ? true : false));
 						//update cart
 						$('.order-form').entwine('sws').updateCart();
 
@@ -142,9 +119,9 @@ jQuery(document).ready(function($){
 				$("#billing .callout").removeClass("callout");
 				$(this).parent().parent().addClass("callout");
 
-				var addressID = $(this).data("id");
-				var typeOfAddress = "billing";
-				var dataquery = { addressID: addressID, type: typeOfAddress };
+				var addressID = $(this).data("id"),
+					typeOfAddress = "billing",
+					dataquery = { addressID: addressID, type: typeOfAddress };
 				modal = $(this);
 
 				$.ajax({
@@ -161,6 +138,7 @@ jQuery(document).ready(function($){
 						$('.address #address-billing #BillingCity input').val(data.City);
 						$('.address #address-billing #BillingPostalCode input').val(data.PostalCode);
 						$('.address #address-billing #BillingState input').val(data.State);
+						$('.address #address-billing #BillingDefault input').prop('checked', (data.Default > 0 ? true : false));
 						//$('.address #address-billing #BillingCity input').val(data.City);
 					}
 				});
@@ -222,6 +200,12 @@ jQuery(document).ready(function($){
 				dataquery = {'addressID' : addressesID, 'type' : typeOfAddress};
 			modal = $(this);
 
+			if(typeOfAddress == "shipping"){
+				$('#shippingAddressModal form').animate({opacity : 0}, 0);
+			} else {
+				$('#billingAddressModal form').animate({opacity : 0}, 0);
+			}
+
 			$.ajax({
 				type: "GET",
 				url : "account/getAddress",
@@ -237,8 +221,11 @@ jQuery(document).ready(function($){
 						$('#shippingAddressModal #ShippingCity input').val(data.City);
 						$('#shippingAddressModal #ShippingPostalCode input').val(data.PostalCode);
 						$('#shippingAddressModal #ShippingState input').val(data.State);
+						$('#shippingAddressModal #ShippingDefault input').prop('checked', (data.Default > 0 ? true : false));
 						//$('#shippingAddressModal #ShippingCity input').val(data.City);
 						$("#shippingAddressModal form").attr("data-id", data.ID);
+
+						$('#shippingAddressModal form').animate({opacity : 1}, 300);
 					} else {
 						$('#billingAddressModal #BillingFirstName input').val(data.FirstName);
 						$('#billingAddressModal #BillingSurname input').val(data.Surname);
@@ -248,8 +235,11 @@ jQuery(document).ready(function($){
 						$('#billingAddressModal #BillingCity input').val(data.City);
 						$('#billingAddressModal #BillingPostalCode input').val(data.PostalCode);
 						$('#billingAddressModal #BillingState input').val(data.State);
+						$('#billingAddressModal #BillingDefault input').prop('checked', (data.Default > 0 ? true : false));
 						//$('#billingAddressModal #BillingCity input').val(data.City);
 						$("#billingAddressModal form").attr("data-id", data.ID);
+
+						$('#billingAddressModal form').animate({opacity : 1}, 300);
 					}
 				}
 			});
@@ -296,7 +286,6 @@ jQuery(document).ready(function($){
 
 		return false;
 	});
-
 
 	// add address
 	$("#addShippingAddress form, #addBillingAddress form").submit(function (e) {

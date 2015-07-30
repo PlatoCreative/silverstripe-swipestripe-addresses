@@ -292,6 +292,7 @@ jQuery(document).ready(function($){
 		e.preventDefault();
 
 		var dataString = $(this).serializeArray(),
+			form = $(this),
 			typeOfAddress = $(this).data("type");
 		dataString.push({ name: "type", value: typeOfAddress });
 
@@ -319,6 +320,15 @@ jQuery(document).ready(function($){
 				$('a.selectable[data-id="' + data.ID + '"]').click();
 
 				$('.reveal-modal').foundation('reveal', 'close');
+
+				// Clear the form fields
+				form.find('input').each(function(){
+					if($(this).hasClass('text')){
+						$(this).val('');
+					} else if ($(this).hasClass('checkbox')){
+						$(this).prop( "checked", false );
+					}
+				});
 			}
 		});
 

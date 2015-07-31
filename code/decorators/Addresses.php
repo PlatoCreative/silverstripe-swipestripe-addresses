@@ -109,6 +109,14 @@ class Addresses_Customer extends DataExtension {
 		}
 		return null;
 	}
+
+	public function DefaultShippingAddress(){
+		return $this->owner->ShippingAddresses()->filter(array('Default' => 1))->first();
+	}
+
+	public function DefaultBillingAddress(){
+		return $this->owner->BillingAddresses()->filter(array('Default' => 1))->first();
+	}
 }
 
 /*

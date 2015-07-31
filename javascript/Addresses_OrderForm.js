@@ -269,9 +269,9 @@ jQuery(document).ready(function($){
 
 				// add new address to the DOM so no reload is required.
 				if(typeOfAddress == "shipping"){
-					$("ul#shipping").find("li .panel .selectable").html(newAddressContent);
+					$("ul#shipping").find("li .panel .selectable[data-id='" + data.ID + "']").html(newAddressContent);
 				}else{
-					$("ul#billing").find("li .panel .selectable").html(newAddressContent);
+					$("ul#billing").find("li .panel .selectable[data-id='" + data.ID + "']").html(newAddressContent);
 				}
 
 				refreshEventListeners();

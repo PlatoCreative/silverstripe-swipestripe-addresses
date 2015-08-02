@@ -24,7 +24,7 @@
 							</li>
 						<% end_loop %>
 					<% else %>
-						<li>
+						<li id="no-shipping-address">
 							<p class="panel address no-addresses">
 								You do not currently have any shipping addresses saved.
 							</p>
@@ -54,7 +54,7 @@
 								</li>
 							<% end_loop %>
 						<% else %>
-							<li>
+							<li id="no-billing-address">
 								<p class="panel address no-addresses">
 									You do not currently have any billing addresses saved.
 								</p>

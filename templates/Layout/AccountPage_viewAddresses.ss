@@ -10,13 +10,18 @@
 				<ul id="shipping" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 					<% if ShippingAddresses %>
 						<% loop ShippingAddresses %>
-							<li><div class="panel address"><p>
-								<a href="javascript:;" data-id="{$ID}" class="selectable">
-								$Address<br />
-								$City</a><br /><br />
-								<a href="javascript:;" class="edit-address" data-id="{$ID}" data-type="shipping" data-reveal-id="shippingAddressModal"><span class="label success">Edit</span></a>
-								<a href="javascript:;" data-id="{$ID}" data-type="shipping" class="delete-address"><span class="label warning">Delete</span></a>
-							</p></div></li>
+							<li id="address-$ID" class="account-addr">
+								<div class="panel address">
+									<p>
+										<span class="adress-inner">
+											$Address<br />
+											$City
+										</span><br />
+										<a href="javascript:;" class="edit-address" data-id="{$ID}" data-type="shipping" data-reveal-id="shippingAddressModal"><span class="label success">Edit</span></a>
+										<a href="javascript:;" data-id="{$ID}" data-type="shipping" class="delete-address"><span class="label warning">Delete</span></a>
+									</p>
+								</div>
+							</li>
 						<% end_loop %>
 					<% else %>
 						<li>
@@ -35,13 +40,18 @@
 					<ul id="billing" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 						<% if BillingAddresses %>
 							<% loop BillingAddresses %>
-								<li><div class="panel address"><p>
-									<a href="javascript:;" data-id="{$ID}" class="selectable">
-									$Address<br />
-									$City</a><br /><br />
-									<a href="javascript:;" class="edit-address" data-id="{$ID}" data-type="billing" data-reveal-id="billingAddressModal"><span class="label success">Edit</span></a>
-									<a href="javascript:;" class="delete-address" data-id="{$ID}" data-type="billing"><span class="label warning">Delete</span></a>
-								</p></div></li>
+								<li id="address-$ID" class="account-addr">
+									<div class="panel address">
+										<p>
+											<span class="adress-inner">
+												$Address<br />
+												$City
+											</span><br />
+											<a href="javascript:;" class="edit-address" data-id="{$ID}" data-type="billing" data-reveal-id="billingAddressModal"><span class="label success">Edit</span></a>
+											<a href="javascript:;" class="delete-address" data-id="{$ID}" data-type="billing"><span class="label warning">Delete</span></a>
+										</p>
+									</div>
+								</li>
 							<% end_loop %>
 						<% else %>
 							<li>

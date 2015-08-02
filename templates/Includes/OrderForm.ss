@@ -9,11 +9,11 @@
 	<% end_if %>
 
 	<fieldset>
-		
+
 		<% if CurrentMember %>
 		<hr />
 		<div class="row">
-			
+
 			<style type="text/css">
 				.panel, .panel.callout{
 					padding: 15px;
@@ -36,8 +36,8 @@
 					font-weight: bold;
 				}
 			</style>
-			
-			
+
+
 			<div class="large-6 columns">
 				<h3>Your Shipping Addresses</h3>
 				<br />
@@ -45,12 +45,13 @@
 					<ul id="shipping" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 					<% if ShippingAddresses %>
 						<% loop ShippingAddresses %>
-							<li>
+							<li id="address-$ID" class="checkout-addr">
 								<div class="panel address <% if Top.getSessionAddress('shipping').ID == $ID %>callout selected<% end_if %>">
 									<p>
 										<a href="javascript:;" data-id="{$ID}" class="selectable">
-										$Address<br />
-										$City</a><br /><br />
+											$Address<br />
+											$City
+										</a><br /><br />
 										<a href="javascript:;" class="edit-address" data-id="{$ID}" data-type="shipping" data-reveal-id="shippingAddressModal"><span class="label success">EDIT</span></a>
 										<a href="javascript:;" data-id="{$ID}" data-type="shipping" class="delete-address"><span class="label warning">DELETE</span></a>
 									</p>
@@ -68,20 +69,21 @@
 					</ul>
 				<% end_with %>
 			</div>
-			
+
 			<div class="large-6 columns">
 				<h3>Your Billing Addresses</h3>
-				<br />		
+				<br />
 				<% with CurrentMember %>
 					<ul id="billing" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 					<% if BillingAddresses %>
 						<% loop BillingAddresses %>
-							<li>
+							<li id="address-$ID" class="checkout-addr">
 								<div class="panel address <% if Top.getSessionAddress('billing').ID == $ID %>callout<% end_if %>">
 									<p>
 										<a href="javascript:;" data-id="{$ID}" class="selectable">
-										$Address<br />
-										$City</a><br /><br />
+											$Address<br />
+											$City
+										</a><br /><br />
 										<a href="javascript:;" class="edit-address" data-id="{$ID}" data-reveal-id="billingAddressModal"><span class="label success">EDIT</span></a>
 										<a href="javascript:;" class="delete-address" data-id="{$ID}" data-type="billing"><span class="label warning">DELETE</span></a>
 									</p>
@@ -99,12 +101,12 @@
 					</ul>
 				<% end_with %>
 			</div>
-						
+
 		</div>
-		
+
 		<hr />
 		<% end_if %>
-		
+
 
 		<% if PersonalDetailsFields %>
 			<section class="personal-details">
@@ -112,12 +114,12 @@
 					$FieldHolder
 				<% end_loop %>
 			</section>
-			
+
 			<hr />
 		<% end_if %>
 
 		<div class="row customer-addresses">
-			
+
 			<div class="large-6 columns">
 				<section class="address">
 					<div id="address-shipping">
@@ -127,7 +129,7 @@
 					</div>
 				</section>
 			</div>
-			
+
 			<div class="large-6 columns">
 				<section class="address">
 					<div id="address-billing">
@@ -137,13 +139,13 @@
 					</div>
 				</section>
 			</div>
-			
+
 			<hr />
-			
+
 		</div>
 
-		
-			
+
+
 		<section class="order-details">
 			<h3><% _t('CheckoutForm.YOUR_ORDER', 'Your Order') %></h3>
 
@@ -152,19 +154,19 @@
 					<h4>Loading...</h4>
 				</div>
 			</div>
-			
+
 			<% include OrderFormCart %>
 		</section>
-	 
+
 
 		<section class="notes">
 			<% loop NotesFields %>
 				$FieldHolder
 			<% end_loop %>
 		</section>
-		
+
 		<hr />
-	 
+
 		<section class="payment-details">
 			<% loop PaymentFields %>
 				$FieldHolder
@@ -186,7 +188,7 @@
 		</div>
 		<% end_if %>
 	<% end_if %>
-	
+
 <% if IncludeFormTag %>
 </form>
 <% end_if %>

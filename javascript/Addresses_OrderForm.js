@@ -269,9 +269,19 @@ jQuery(document).ready(function($){
 
 				// add new address to the DOM so no reload is required.
 				if(typeOfAddress == "shipping"){
-					$("ul#shipping").find("li .panel .selectable[data-id='" + data.ID + "']").html(newAddressContent);
-				}else{
-					$("ul#billing").find("li .panel .selectable[data-id='" + data.ID + "']").html(newAddressContent);
+					var elm = $("ul#shipping").find("#address-" + data.ID).first();
+					if(elm.hasClass('account-addr')){
+						elm.find(".adress-inner").html(newAddressContent);
+					} else {
+						elm.find(".panel .selectable").html(newAddressContent);
+					}
+				} else {
+					var elm = $("ul#billing").find("#address-" + data.ID).first();
+					if(elm.hasClass('account-addr')){
+						elm.find(".adress-inner").html(newAddressContent);
+					} else {
+						elm.find(".panel .selectable").html(newAddressContent);
+					}
 				}
 
 				refreshEventListeners();
@@ -302,7 +312,11 @@ jQuery(document).ready(function($){
 			data: dataString,
 			dataType : 'json',
 			success: function(data) {
-				var newAddressElement = '<li><div class="panel address"><p><a href="javascript:;" data-id="' + data.ID + '" class="selectable">' + data.Address + '<br>' + data.City + '</a><br><br><a href="javascript:;" data-id="' + data.ID + '" class="edit-address" data-reveal-id="' + typeOfAddress + 'AddressModal" data-type="' + typeOfAddress + '"><span class="label success">EDIT</span></a> <a href="javascript:;" data-id="' + data.ID + '" data-type="' + typeOfAddress + '" class="delete-address"><span class="label warning">DELETE</span></a></p></div></li>';
+				if($('.account-shipping-block').length > 0){
+					var newAddressElement = '<li id="address-' + data.ID + '" class="account-addr"><div class="panel address"><p><span class="adress-inner">' + data.Address + '<br>' + data.City + '</span><br><a href="javascript:;" data-id="' + data.ID + '" class="edit-address" data-reveal-id="' + typeOfAddress + 'AddressModal" data-type="' + typeOfAddress + '"><span class="label success">EDIT</span></a> <a href="javascript:;" data-id="' + data.ID + '" data-type="' + typeOfAddress + '" class="delete-address"><span class="label warning">DELETE</span></a></p></div></li>';
+				} else {
+					var newAddressElement = '<li id="address-' + data.ID + '"><div class="panel address"><p><a href="javascript:;" data-id="' + data.ID + '" class="selectable">' + data.Address + '<br>' + data.City + '</a><br><br><a href="javascript:;" data-id="' + data.ID + '" class="edit-address" data-reveal-id="' + typeOfAddress + 'AddressModal" data-type="' + typeOfAddress + '"><span class="label success">EDIT</span></a> <a href="javascript:;" data-id="' + data.ID + '" data-type="' + typeOfAddress + '" class="delete-address"><span class="label warning">DELETE</span></a></p></div></li>';
+				}
 
 				// add new address to the DOM so no reload is required.
 				if(typeOfAddress == "shipping"){

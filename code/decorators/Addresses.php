@@ -310,8 +310,8 @@ class Addresses_OrderForm extends Extension {
 
 	public function SessionAddress($type = 'shipping'){
 		$customer = Member::currentUser();
-		$shippingAddress = $customer ? $customer->ShippingAddresses()->filter(array('Default' => 1))->first() : null;
-		$billingAddress = $customer ? $customer->BillingAddresses()->filter(array('Default' => 1))->first() : null;
+		$shippingAddress = ($customer && $customer->ShippingAddresses()) ? $customer->ShippingAddresses()->filter(array('Default' => 1))->first() : null;
+		$billingAddress = ($customer && $customer->BillingAddresses()) ? $customer->BillingAddresses()->filter(array('Default' => 1))->first() : null;
 
 		$ShippingID = Session::get('ShippingAddressID') ? Session::get('ShippingAddressID') : ($shippingAddress ? $shippingAddress->ID : false);
 		$BillingID = Session::get('BillingAddressID') ? Session::get('BillingAddressID') : ($billingAddress ? $billingAddress->ID : false);

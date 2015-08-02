@@ -126,7 +126,7 @@ class Addresses_OrderForm extends Extension {
 
  	public function ShippingAddressFields(){
 		$shippingAddSession = self::SessionAddress('shipping');
-		$currentUser = Member::currentUser();
+		$currentUser = Customer::currentUser();
 
 		$shippingAddressFields = CompositeField::create(
 			HeaderField::create(_t('CheckoutPage.SHIPPING_ADDRESS',"Shipping Address"), 3),
@@ -209,7 +209,7 @@ class Addresses_OrderForm extends Extension {
 
 		$shippingAddSession = self::SessionAddress('shipping');
 
-		$currentUser = Member::currentUser();
+		$currentUser = Customer::currentUser();
 		if($currentUser){
 			if(!self::SessionAddress('billing')){
 				$billingAddSession = $shippingAddSession;
@@ -309,7 +309,7 @@ class Addresses_OrderForm extends Extension {
 	}
 
 	public function SessionAddress($type = 'shipping'){
-		$customer = Member::currentUser();
+		$customer = Customer::currentUser();
 		$shippingAddress = ($customer && $customer->ShippingAddresses()) ? $customer->ShippingAddresses()->filter(array('Default' => 1))->first() : null;
 		$billingAddress = ($customer && $customer->BillingAddresses()) ? $customer->BillingAddresses()->filter(array('Default' => 1))->first() : null;
 
@@ -462,7 +462,7 @@ class Addresses_CountriesAdmin extends ShopAdmin {
 	}
 
 	public function getSnippet() {
-		if (!$member = Member::currentUser()){
+		if (!$member = Customer::currentUser()){
 			return false;
 		}
 		if (!Permission::check('CMS_ACCESS_' . get_class($this), 'any', $member)){

@@ -132,15 +132,22 @@ class Addresses_OrderForm extends Extension {
 			HeaderField::create(_t('CheckoutPage.SHIPPING_ADDRESS',"Shipping Address"), 3),
 			TextField::create('ShippingFirstName', _t('CheckoutPage.FIRSTNAME',"First Name"), $shippingAddSession ? $shippingAddSession->FirstName : '')
 				->addExtraClass('shipping-firstname')
+				->addExtraClass('requiredField')
+				->setAttribute('required', 'required')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_FIRSTNAME',"Please enter a first name.")),
 			TextField::create('ShippingSurname', _t('CheckoutPage.SURNAME',"Surname"), $shippingAddSession ? $shippingAddSession->Surname : '')
+				->addExtraClass('requiredField')
+				->setAttribute('required', 'required')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_SURNAME',"Please enter a surname.")),
 			TextField::create('ShippingCompany', _t('CheckoutPage.COMPANY',"Company"), $shippingAddSession ? $shippingAddSession->Company : ''),
 			TextField::create('ShippingAddress', _t('CheckoutPage.ADDRESS',"Address"), $shippingAddSession ? $shippingAddSession->Address : '')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_ADDRESS',"Please enter an address."))
-				->addExtraClass('address-break'),
+				->addExtraClass('requiredField')->addExtraClass('address-break')
+				->setAttribute('required', 'required'),
 			TextField::create('ShippingAddressLine2', '&nbsp;', $shippingAddSession ? $shippingAddSession->AddressLine2 : ''),
 			TextField::create('ShippingCity', _t('CheckoutPage.CITY',"City"), $shippingAddSession ? $shippingAddSession->City : '')
+				->addExtraClass('requiredField')
+				->setAttribute('required', 'required')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_CITY',"Please enter a city.")),
 			TextField::create('ShippingPostalCode', _t('CheckoutPage.POSTAL_CODE',"Zip / Postal Code"), $shippingAddSession ? $shippingAddSession->PostalCode : ''),
 			TextField::create('ShippingState', _t('CheckouanypotPage.STATE',"State / Province"), $shippingAddSession ? $shippingAddSession->State : '')
@@ -153,7 +160,7 @@ class Addresses_OrderForm extends Extension {
 					Country_Shipping::get()->map('Code', 'Title')->toArray()
 				)
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_COUNTRY',"Please enter a country."))
-				->addExtraClass('country-code')
+				->addExtraClass('country-code')->addExtraClass('requiredField')
 				->setValue($shippingAddSession ? $shippingAddSession->CountryCode : ''),
 			CheckboxField::create('ShippingDefault', 'Default shipping address?')
 		)->setID('ShippingAddress')->setName('ShippingAddress');
@@ -174,15 +181,23 @@ class Addresses_OrderForm extends Extension {
 			HeaderField::create(_t('CheckoutPage.BILLINGADDRESS',"Billing Address"), 3),
 			TextField::create('BillingFirstName', _t('CheckoutPage.FIRSTNAME',"First Name"), $billingAddSession ? $billingAddSession->FirstName : '')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURFIRSTNAME',"Please enter your first name."))
-				->addExtraClass('address-break'),
+				->addExtraClass('address-break')
+				->addExtraClass('requiredField')
+				->setAttribute('required', 'required'),
 			TextField::create('BillingSurname', _t('CheckoutPage.SURNAME',"Surname"), $billingAddSession ? $billingAddSession->Surname : '')
+				->addExtraClass('requiredField')
+				->setAttribute('required', 'required')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURSURNAME',"Please enter your surname.")),
 			TextField::create('BillingCompany', _t('CheckoutPage.COMPANY',"Company"), $billingAddSession ? $billingAddSession->Company : ''),
 			TextField::create('BillingAddress', _t('CheckoutPage.ADDRESS',"Address"), $billingAddSession ? $billingAddSession->Address : '')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURADDRESS',"Please enter your address."))
-				->addExtraClass('address-break'),
+				->addExtraClass('address-break')
+				->addExtraClass('requiredField')
+				->setAttribute('required', 'required'),
 			TextField::create('BillingAddressLine2', '&nbsp;', $billingAddSession ? $billingAddSession->AddressLine2 : ''),
 			TextField::create('BillingCity', _t('CheckoutPage.CITY',"City"), $billingAddSession ? $billingAddSession->City : '')
+				->addExtraClass('requiredField')
+				->setAttribute('required', 'required')
 				->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCITY',"Please enter your city")),
 			TextField::create('BillingPostalCode', _t('CheckoutPage.POSTALCODE',"Zip / Postal Code"), $billingAddSession ? $billingAddSession->PostalCode : ''),
 			TextField::create('BillingState', _t('CheckoutPage.STATE',"State / Province"), $billingAddSession ? $billingAddSession->State : '')

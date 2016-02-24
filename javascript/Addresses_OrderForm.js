@@ -221,6 +221,7 @@ jQuery(document).ready(function($){
 						$('#shippingAddressModal #ShippingCity input').val(data.City);
 						$('#shippingAddressModal #ShippingPostalCode input').val(data.PostalCode);
 						$('#shippingAddressModal #ShippingState input').val(data.State);
+						$('#shippingAddressModal #ShippingRegionCode select').val(data.RegionCode);
 						$('#shippingAddressModal #ShippingDefault input').prop('checked', (data.Default > 0 ? true : false));
 						//$('#shippingAddressModal #ShippingCity input').val(data.City);
 						$("#shippingAddressModal form").attr("data-id", data.ID);

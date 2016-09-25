@@ -44,10 +44,19 @@ jQuery(document).ready(function($){
 	$("#OrderForm_OrderForm").submit(function(e) {
 		// check if a shipping and billing
 		if($("#shipping .selected").length > 0){
+			// Check if billing selected or same as shipping checked
 			if($("#billing .callout").length > 0 || $('#BillToShippingAddress .checkbox').is(':checked')){
-				return true;
+			} else {
+				StopFormSending(e);
 			}
+		} else {
+			StopFormSending(e);
 		}
+	});
+
+	// Stop form from sending
+	function StopFormSending(e){
+		e.stopPropagation();
 		e.preventDefault();
 		if($('#alertMessagesText').length > 0){
 			var offset = $('#shipping').offset();
@@ -59,8 +68,10 @@ jQuery(document).ready(function($){
 			alert("Please select your shipping and billing address.");
 		}
 		$(".Actions .loading img").css("display", "none");
-		$("#OrderForm_OrderForm_action_process").val("Proceed to pay");
-	});
+		Window.setTimeout(function(){
+			$("#OrderForm_OrderForm_action_process").val("Proceed to pay");
+		}, 500);
+	}
 
 	function refreshEventListeners(){
 		// manage shipping selections

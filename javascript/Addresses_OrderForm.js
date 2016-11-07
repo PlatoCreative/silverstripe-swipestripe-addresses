@@ -60,7 +60,7 @@ jQuery(document).ready(function($){
 		// check if a shipping and billing
 		if($("#shipping .selected").length > 0){
 			// Check if billing selected or same as shipping checked
-			if(($("#billing .callout").length > 0) || !$('#OrderForm_OrderForm_BillToShippingAddress').is(':checked')){
+			if(($("#billing .callout").length > 0) || $('#OrderForm_OrderForm_BillToShippingAddress').is(':checked')){
 			} else {
 				StopFormSending(e);
 			}

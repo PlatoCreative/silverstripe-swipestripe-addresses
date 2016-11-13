@@ -54,6 +54,9 @@ jQuery(document).ready(function($){
 		});
 	});
 
+	// Remove required from hidden address form
+	$('.customer-addresses .text').removeAttr('required');
+
 	// order form submission
 	$(document).on('submit', '#OrderForm_OrderForm', function(e){
 	//$("#OrderForm_OrderForm").submit(function(e) {

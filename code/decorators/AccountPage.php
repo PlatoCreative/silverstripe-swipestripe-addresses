@@ -213,6 +213,7 @@ class AccountPageExtension_Controller extends DataExtension {
                     $address->PostalCode = isset($data['ShippingPostalCode']) ? $data['ShippingPostalCode'] : null;
                     $address->State = isset($data['ShippingState']) ? $data['ShippingState'] : null;
                     $address->RegionCode = isset($data['ShippingRegionCode']) ? $data['ShippingRegionCode'] : null;
+                    $address->CountryCode = isset($data['ShippingCountryCode']) ? $data['ShippingCountryCode'] : null;
                     $address->Default = isset($data['ShippingDefault']) ? $data['ShippingDefault'] : null;
 
                     $address->write(); // automatic escaping
@@ -228,6 +229,7 @@ class AccountPageExtension_Controller extends DataExtension {
                     $address->PostalCode = isset($data['BillingPostalCode']) ? $data['BillingPostalCode'] : null;
                     $address->State = isset($data['BillingState']) ? $data['BillingState'] : null;
                     $address->RegionCode = isset($data['BillingRegionCode']) ? $data['BillingRegionCode'] : null;
+                    $address->CountryCode = isset($data['BillingCountryCode']) ? $data['BillingCountryCode'] : null;
                     $address->Default = isset($data['BillingDefault']) ? $data['BillingDefault'] : null;
 
                     $address->write(); // automatic escaping

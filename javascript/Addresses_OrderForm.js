@@ -109,6 +109,7 @@ jQuery(document).ready(function($){
 				data: dataquery,
 				dataType : 'json',
 				success: function(data) {
+					console.log(data);
 					$('.address #address-shipping #ShippingFirstName input').val(data.FirstName);
 					$('.address #address-shipping #ShippingSurname input').val(data.Surname);
 					$('.address #address-shipping #ShippingCompany input').val(data.Company);
@@ -117,7 +118,8 @@ jQuery(document).ready(function($){
 					$('.address #address-shipping #ShippingCity input').val(data.City);
 					$('.address #address-shipping #ShippingPostalCode input').val(data.PostalCode);
 					$('.address #address-shipping #ShippingState input').val(data.State);
-					$('.address #address-shipping #ShippingRegionCode select').val(data.RegionCode);
+					$('.address #address-shipping #ShippingRegionCode select').val(data.RegionName);
+					$('.address #address-shipping #ShippingCountryCode select').val(data.CountryCode);
 					//$('.address #address-shipping #ShippingCity input').val(data.City);
 					$('.address #address-shipping #ShippingDefault input').prop('checked', (data.Default > 0 ? true : false));
 					//update cart
@@ -162,6 +164,7 @@ jQuery(document).ready(function($){
 					$('.address #address-billing #BillingCity input').val(data.City);
 					$('.address #address-billing #BillingPostalCode input').val(data.PostalCode);
 					$('.address #address-billing #BillingState input').val(data.State);
+					$('.address #address-billing #BillingCountryCode select').val(data.CountryCode);
 					$('.address #address-billing #BillingDefault input').prop('checked', (data.Default > 0 ? true : false));
 					//$('.address #address-billing #BillingCity input').val(data.City);
 				}
@@ -243,7 +246,8 @@ jQuery(document).ready(function($){
 					$('#shippingAddressModal #ShippingCity input').val(data.City);
 					$('#shippingAddressModal #ShippingPostalCode input').val(data.PostalCode);
 					$('#shippingAddressModal #ShippingState input').val(data.State);
-					$('#shippingAddressModal #ShippingRegionCode select').val(data.RegionCode);
+					$('#shippingAddressModal #ShippingRegionCode select').val(data.RegionName);
+					$('#shippingAddressModal #ShippingCountryCode select').val(data.CountryCode);
 					$('#shippingAddressModal #ShippingDefault input').prop('checked', (data.Default > 0 ? true : false));
 					//$('#shippingAddressModal #ShippingCity input').val(data.City);
 					$("#shippingAddressModal form").attr("data-id", data.ID);
@@ -258,6 +262,7 @@ jQuery(document).ready(function($){
 					$('#billingAddressModal #BillingCity input').val(data.City);
 					$('#billingAddressModal #BillingPostalCode input').val(data.PostalCode);
 					$('#billingAddressModal #BillingState input').val(data.State);
+					$('#billingAddressModal #BillingCountryCode select').val(data.CountryCode);
 					$('#billingAddressModal #BillingDefault input').prop('checked', (data.Default > 0 ? true : false));
 					//$('#billingAddressModal #BillingCity input').val(data.City);
 					$("#billingAddressModal form").attr("data-id", data.ID);
@@ -308,9 +313,9 @@ jQuery(document).ready(function($){
 				$('.reveal-modal').foundation('reveal', 'close');
 
 				// Update the form
-				if(typeOfAddress == 'shipping'){
+				//if(typeOfAddress == 'shipping'){
 					$("#" + typeOfAddress + " .callout .selectable").click();
-				}
+				//}
 			}
 		});
 

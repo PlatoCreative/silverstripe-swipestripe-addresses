@@ -118,7 +118,7 @@ jQuery(document).ready(function($){
 					$('.address #address-shipping #ShippingCity input').val(data.City);
 					$('.address #address-shipping #ShippingPostalCode input').val(data.PostalCode);
 					$('.address #address-shipping #ShippingState input').val(data.State);
-					$('.address #address-shipping #ShippingRegionCode select').val(data.RegionName);
+					$('.address #address-shipping #ShippingRegionCode select').val(data.RegionCode);
 					$('.address #address-shipping #ShippingCountryCode select').val(data.CountryCode);
 					//$('.address #address-shipping #ShippingCity input').val(data.City);
 					$('.address #address-shipping #ShippingDefault input').prop('checked', (data.Default > 0 ? true : false));
@@ -246,7 +246,7 @@ jQuery(document).ready(function($){
 					$('#shippingAddressModal #ShippingCity input').val(data.City);
 					$('#shippingAddressModal #ShippingPostalCode input').val(data.PostalCode);
 					$('#shippingAddressModal #ShippingState input').val(data.State);
-					$('#shippingAddressModal #ShippingRegionCode select').val(data.RegionName);
+					$('#shippingAddressModal #ShippingRegionCode select').val(data.RegionCode);
 					$('#shippingAddressModal #ShippingCountryCode select').val(data.CountryCode);
 					$('#shippingAddressModal #ShippingDefault input').prop('checked', (data.Default > 0 ? true : false));
 					//$('#shippingAddressModal #ShippingCity input').val(data.City);

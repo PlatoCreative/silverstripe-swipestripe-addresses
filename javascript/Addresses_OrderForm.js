@@ -87,9 +87,7 @@ jQuery(document).ready(function($){
 			alert("Please select your shipping and billing address.");
 		}
 		$(".Actions .loading img").css("display", "none");
-		Window.setTimeout(function(){
-			$("#OrderForm_OrderForm_action_process").val("Proceed to pay");
-		}, 500);
+		$("#OrderForm_OrderForm_action_process").attr('value', "Proceed to pay");
 	}
 
 	$(document).on('click', "#shipping .selectable", function(e){
